@@ -20,12 +20,7 @@ export const signUpUser = async ({ email, password }: AuthData): Promise<UserCre
   if (!status.isValid) throw new Error('Senha invalida')
 
   return createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up
-      const user = userCredential.user
-      console.log('Usuário cadastrado com sucesso:', user)
-      return userCredential
-    })
+    .then((userCredential) => userCredential)
     .catch((error) => {
       console.error('Erro ao cadastrar usuário:', error.message)
       throw new Error(error.message)
@@ -37,15 +32,10 @@ export const signUpUser = async ({ email, password }: AuthData): Promise<UserCre
  * @param {string} email - User email.
  * @param {string} password - User password.
  */
-export const loginUser = async ({ email, password }: AuthData): Promise<UserCredential> => {
+export const signInUser = async ({ email, password }: AuthData): Promise<UserCredential> => {
   // Creating the user in Firebase Authentication
   return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up
-      const user = userCredential.user
-      console.log('Usuário cadastrado com sucesso:', user)
-      return userCredential
-    })
+    .then((userCredential) => userCredential)
     .catch((error) => {
       console.error('Erro ao cadastrar usuário:', error.message)
       throw new Error(error.message)
@@ -55,12 +45,11 @@ export const loginUser = async ({ email, password }: AuthData): Promise<UserCred
 /**
  * Function to logout user.
  */
-export const logoutUser = async (): Promise<void> => {
+export const signOutUser = async (): Promise<void> => {
   return signOut(auth)
-    .then((data) => {
-      console.log('Usuário deslogado com sucesso', data)
-    })
+    .then((data) => data)
     .catch((error) => {
       console.error('Erro ao fazer logout:', error.message)
+      throw new Error(error.message)
     })
 }
