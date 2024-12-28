@@ -2,10 +2,11 @@
 
 <template>
   <header>
-    <div class="wrapper">
+    <div>
       <nav>
         <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-        <RouterLink :to="{ name: 'signUp' }">About</RouterLink>
+        <RouterLink :to="{ name: 'signUp' }">Sign Up</RouterLink>
+        <RouterLink :to="{ name: 'signIn' }">Sign In</RouterLink>
       </nav>
     </div>
   </header>
@@ -13,4 +14,9 @@
   <RouterView />
 </template>
 
-<style scoped></style>
+<style scoped>
+nav {
+  display: flex;
+  gap: 1rem;
+}
+</style>
