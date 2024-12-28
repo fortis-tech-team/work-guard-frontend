@@ -2,12 +2,14 @@ import { defineStore } from 'pinia'
 import { auth } from '@/firebase/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { signInUser, signUpUser, signOutUser } from '@/services/auth'
-import type { AuthState } from '@/interfaces/store/AuthState'
+import type { AuthState, LoadingKey } from '@/interfaces/store/AuthState'
+
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
-    loading: false,
+    loading: {},
     error: null,
   }),
 
@@ -16,40 +18,48 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
+    setLoading({ name, isLoading }: { name: LoadingKey; isLoading: boolean }): void {
+      this.loading = { ...this.loading, [name]: isLoading }
+    },
     register(email: string, password: string) {
-      this.loading = true
+      this.setLoading({ name: 'create', isLoading: true })
       this.error = null
 
       return signUpUser({ email, password })
         .then((data) => (this.user = data.user))
         .catch((err) => (this.error = err.message || 'Erro ao criar conta'))
-        .finally(() => (this.loading = false))
+        .finally(() => this.setLoading({ name: 'create', isLoading: false }))
     },
 
     login(email: string, password: string) {
-      this.loading = true
+      this.setLoading({ name: 'login', isLoading: true })
       this.error = null
 
       return signInUser({ email, password })
         .then((data) => (this.user = data.user))
         .catch((err) => (this.error = err.message || 'Erro ao fazer login'))
-        .finally(() => (this.loading = false))
+        .finally(() => this.setLoading({ name: 'login', isLoading: false }))
     },
 
     logout() {
-      this.loading = true
+      this.setLoading({ name: 'logout', isLoading: true })
       this.error = null
 
       return signOutUser()
         .then(() => (this.user = null))
         .catch((err) => (this.error = err.message || 'Erro ao fazer logout'))
-        .finally(() => (this.loading = false))
+        .finally(() => this.setLoading({ name: 'logout', isLoading: false }))
     },
 
     // Monitor changes in authentication state
     monitorAuthState() {
       onAuthStateChanged(auth, (user) => {
-        this.user = user
+        if (user) {
+          this.user = user
+          router.push({ name: 'home' })
+        } else {
+          router.push({ name: 'signIn' })
+        }
       })
     },
   },
