@@ -9,7 +9,6 @@ const user = ref({
 
 function signUp() {
   signUpUser(user.value)
-  console.log(user.value)
 }
 </script>
 

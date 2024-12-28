@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main>Hello Word</main>
+  <main>Essa rota eh protegida</main>
 </template>

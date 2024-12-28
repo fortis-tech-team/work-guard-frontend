@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { loginUser } from '@/services/auth'
+import { signInUser } from '@/services/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const user = ref({
   email: '',
@@ -8,8 +11,7 @@ const user = ref({
 })
 
 async function signIn() {
-  const data = loginUser(user.value)
-  console.log(data)
+  signInUser(user.value).then(() => router.push({ name: 'home' }))
 }
 </script>
 
