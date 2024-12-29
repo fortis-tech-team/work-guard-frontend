@@ -2,9 +2,14 @@ import { defineStore } from 'pinia'
 import { auth } from '@/firebase/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { signInUser, signUpUser, signOutUser } from '@/services/auth'
-import type { AuthState, LoadingKey } from '@/interfaces/store/AuthState'
+import { useUserStore } from './user'
+
+import type { AuthState } from '@/interfaces/store/AuthState'
+import type { UserData } from '@/interfaces/models/User'
 
 import router from '@/router'
+import type { AuthData } from '@/interfaces/models/Auth'
+import type { LoadingKey } from '@/interfaces/store/VariablesState'
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
@@ -21,12 +26,27 @@ export const useAuthStore = defineStore('auth', {
     setLoading({ name, isLoading }: { name: LoadingKey; isLoading: boolean }): void {
       this.loading = { ...this.loading, [name]: isLoading }
     },
-    register(email: string, password: string) {
+    register({ email, password }: AuthData) {
       this.setLoading({ name: 'create', isLoading: true })
       this.error = null
 
       return signUpUser({ email, password })
-        .then((data) => (this.user = data.user))
+        .then((data) => {
+          if (!data) return
+
+          this.user = data.user
+
+          const userData: UserData = {
+            uid: this.user.uid,
+            role: 'Admin',
+            first_name: 'Teste',
+            last_name: 'Sobrenome',
+            position: 'Enginner',
+          }
+
+          const userStore = useUserStore()
+          userStore.createUser(userData)
+        })
         .catch((err) => (this.error = err.message || 'Erro ao criar conta'))
         .finally(() => this.setLoading({ name: 'create', isLoading: false }))
     },

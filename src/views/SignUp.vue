@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import { useAuthStore } from '@/stores/auth'
 import { ref } from 'vue'
-import { signUpUser } from '@/services/auth'
+
+const authStore = useAuthStore()
 
 const user = ref({
   email: '',
@@ -8,7 +10,7 @@ const user = ref({
 })
 
 function signUp() {
-  signUpUser(user.value)
+  authStore.register(user.value)
 }
 </script>
 
