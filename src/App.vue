@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 
 const authStore = useAuthStore()
+const router = useRouter()
 
-function logout() {
-  authStore.logout()
+async function logout() {
+  await authStore.logout()
+  router.push({ name: 'signIn' })
 }
 </script>
 
@@ -12,7 +15,7 @@ function logout() {
   <header>
     <div>
       <nav>
-        <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+        <RouterLink :to="{ name: 'home' }" v-if="authStore.isAuthenticated">Home</RouterLink>
         <RouterLink :to="{ name: 'signUp' }" v-if="!authStore.isAuthenticated">
           Sign Up
         </RouterLink>
@@ -23,7 +26,8 @@ function logout() {
     </div>
   </header>
 
-  <RouterView />
+  <p v-if="authStore.loading.get">loading testing</p>
+  <RouterView v-else />
 </template>
 
 <style scoped>

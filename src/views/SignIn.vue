@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { signInUser } from '@/services/auth'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const authStore = useAuthStore()
+const router = useRouter()
 
 const user = ref({
   email: '',
@@ -8,7 +13,9 @@ const user = ref({
 })
 
 async function signIn() {
-  signInUser(user.value)
+  const data = await authStore.login(user.value)
+
+  if (data?.uid) router.push({ name: 'home' })
 }
 </script>
 

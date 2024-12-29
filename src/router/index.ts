@@ -26,8 +26,13 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
+
+  if (authStore.isFirstVisit) {
+    await authStore.monitorAuthState()
+    authStore.isFirstVisit = false
+  }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'signIn' }) // Redirect to login page

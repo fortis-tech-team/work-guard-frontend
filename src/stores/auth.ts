@@ -7,7 +7,6 @@ import { useUserStore } from './user'
 import type { AuthState } from '@/interfaces/store/AuthState'
 import type { UserData } from '@/interfaces/models/User'
 
-import router from '@/router'
 import type { AuthData } from '@/interfaces/models/Auth'
 import type { LoadingKey } from '@/interfaces/store/VariablesState'
 
@@ -16,6 +15,7 @@ export const useAuthStore = defineStore('auth', {
     user: null,
     loading: {},
     error: null,
+    isFirstVisit: true,
   }),
 
   getters: {
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
         .finally(() => this.setLoading({ name: 'create', isLoading: false }))
     },
 
-    login(email: string, password: string) {
+    login({ email, password }: AuthData) {
       this.setLoading({ name: 'login', isLoading: true })
       this.error = null
 
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
         .finally(() => this.setLoading({ name: 'login', isLoading: false }))
     },
 
-    logout() {
+    logout(): Promise<void> {
       this.setLoading({ name: 'logout', isLoading: true })
       this.error = null
 
@@ -73,13 +73,24 @@ export const useAuthStore = defineStore('auth', {
 
     // Monitor changes in authentication state
     monitorAuthState() {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.user = user
-          router.push({ name: 'home' })
-        } else {
-          router.push({ name: 'signIn' })
-        }
+      return new Promise((resolve, reject) => {
+        this.setLoading({ name: 'get', isLoading: true })
+        onAuthStateChanged(
+          auth,
+          (user) => {
+            this.setLoading({ name: 'get', isLoading: false })
+            if (user) {
+              this.user = user
+              resolve(user)
+            } else {
+              this.user = null
+              resolve(null)
+            }
+          },
+          (error) => {
+            reject(error)
+          },
+        )
       })
     },
   },

@@ -5,4 +5,5 @@ export interface AuthState {
   user: User | null
   loading: Partial<LoadingState>
   error: string | null
+  isFirstVisit: boolean
 }
