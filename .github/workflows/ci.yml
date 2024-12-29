@@ -12,28 +12,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Verifica o repositório
+      # 1. Check Repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Configura o Node.js
+      # 2. Config Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # 3. Instala dependências
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Executa o Prettier
+      # 4. Exec rettier
       - name: Run Prettier
         run: npm run prettier-check
 
-      # 5. Executa o ESLint
+      # 5. Exec Lint
       - name: Run ESLint
         run: npm run lint
 
-      # 6. Executa os testes
+      # 6. Exec Test Unit
       - name: Run Tests
-        run: npm run test:unit
+        run: npm run test
