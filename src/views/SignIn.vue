@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import { onBeforeMount, ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { onBeforeMount, ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
-const authStore = useAuthStore()
-const router = useRouter()
+const authStore = useAuthStore();
+const router = useRouter();
 
 onBeforeMount(() => {
-  if (authStore.isAuthenticated) router.push({ name: 'home' })
-})
+  if (authStore.isAuthenticated) router.push({ name: 'home' });
+});
 
 const user = ref({
   email: '',
   password: '',
-})
+});
 
 async function signIn() {
-  const data = await authStore.login(user.value)
+  const data = await authStore.login(user.value);
 
-  if (data?.uid) router.push({ name: 'home' })
+  if (data?.uid) router.push({ name: 'home' });
 }
 </script>
 

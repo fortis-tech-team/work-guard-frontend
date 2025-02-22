@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import { useAuthStore } from '@/stores/auth'
-import { onBeforeMount, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth';
+import { onBeforeMount, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
 onBeforeMount(() => {
-  if (authStore.isAuthenticated) router.push({ name: 'home' })
-})
+  if (authStore.isAuthenticated) router.push({ name: 'home' });
+});
 
 const user = ref({
   email: '',
   password: '',
   first_name: '',
-})
+});
 
 async function signUp() {
-  const isCreated = await authStore.register(user.value)
-  if (isCreated) router.push({ name: 'home' })
+  const isCreated = await authStore.register(user.value);
+  if (isCreated) router.push({ name: 'home' });
 }
 </script>
 

@@ -1,5 +1,5 @@
-import { db } from '@/firebase/firebase'
-import type { UserData } from '@/interfaces/models/User'
+import { db } from '@/firebase/firebase';
+import type { UserData } from '@/interfaces/models/User';
 import {
   collection,
   doc,
@@ -8,9 +8,9 @@ import {
   updateDoc,
   deleteDoc,
   type DocumentData,
-} from 'firebase/firestore'
+} from 'firebase/firestore';
 
-const usersCollection = collection(db, 'users')
+const usersCollection = collection(db, 'users');
 
 /**
  * Creates a new user in Firestore.
@@ -21,9 +21,9 @@ export function createUserService(user: UserData): Promise<boolean> {
   return setDoc(doc(usersCollection, user.uid), user)
     .then(() => true)
     .catch((error) => {
-      console.error('Error creating user:', error)
-      throw error
-    })
+      console.error('Error creating user:', error);
+      throw error;
+    });
 }
 
 /**
@@ -35,15 +35,15 @@ export function getUserByIdService(uid: string): Promise<DocumentData> {
   return getDoc(doc(usersCollection, uid))
     .then((docSnap) => {
       if (docSnap.exists()) {
-        return docSnap.data()
+        return docSnap.data();
       } else {
-        throw new Error('User not found.')
+        throw new Error('User not found.');
       }
     })
     .catch((error) => {
-      console.error('Error fetching user:', error)
-      throw error
-    })
+      console.error('Error fetching user:', error);
+      throw error;
+    });
 }
 
 /**
@@ -55,12 +55,12 @@ export function getUserByIdService(uid: string): Promise<DocumentData> {
 export function updateUserService(uid: string, updates: Partial<UserData>): Promise<void> {
   return updateDoc(doc(usersCollection, uid), updates)
     .then(() => {
-      console.log('User updated successfully!')
+      console.log('User updated successfully!');
     })
     .catch((error) => {
-      console.error('Error updating user:', error)
-      throw error
-    })
+      console.error('Error updating user:', error);
+      throw error;
+    });
 }
 
 /**
@@ -71,10 +71,10 @@ export function updateUserService(uid: string, updates: Partial<UserData>): Prom
 export function deleteUserService(uid: string): Promise<void> {
   return deleteDoc(doc(usersCollection, uid))
     .then(() => {
-      console.log('User deleted successfully!')
+      console.log('User deleted successfully!');
     })
     .catch((error) => {
-      console.error('Error deleting user:', error)
-      throw error
-    })
+      console.error('Error deleting user:', error);
+      throw error;
+    });
 }

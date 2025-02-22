@@ -5,9 +5,9 @@ import {
   signOut,
   validatePassword,
   type UserCredential,
-} from 'firebase/auth'
-import { auth } from '@/firebase/firebase'
-import type { AuthData } from '@/interfaces/models/Auth'
+} from 'firebase/auth';
+import { auth } from '@/firebase/firebase';
+import type { AuthData } from '@/interfaces/models/Auth';
 
 /**
  * Function to register a new user with additional data.
@@ -16,16 +16,16 @@ import type { AuthData } from '@/interfaces/models/Auth'
  */
 export const signUpUser = async ({ email, password }: AuthData): Promise<UserCredential> => {
   // Creating the user in Firebase Authentication
-  const status = await validatePassword(auth, password)
-  if (!status.isValid) throw new Error('Senha invalida')
+  const status = await validatePassword(auth, password);
+  if (!status.isValid) throw new Error('Senha invalida');
 
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => userCredential)
     .catch((error) => {
-      console.error('Erro ao cadastrar usuário:', error.message)
-      throw new Error(error.message)
-    })
-}
+      console.error('Erro ao cadastrar usuário:', error.message);
+      throw new Error(error.message);
+    });
+};
 
 /**
  * Function to register a new user with additional data.
@@ -37,10 +37,10 @@ export const signInUser = async ({ email, password }: AuthData): Promise<UserCre
   return signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => userCredential)
     .catch((error) => {
-      console.error('Erro ao cadastrar usuário:', error.message)
-      throw new Error(error.message)
-    })
-}
+      console.error('Erro ao cadastrar usuário:', error.message);
+      throw new Error(error.message);
+    });
+};
 
 /**
  * Function to logout user.
@@ -49,7 +49,7 @@ export const signOutUser = async (): Promise<void> => {
   return signOut(auth)
     .then((data) => data)
     .catch((error) => {
-      console.error('Erro ao fazer logout:', error.message)
-      throw new Error(error.message)
-    })
-}
+      console.error('Erro ao fazer logout:', error.message);
+      throw new Error(error.message);
+    });
+};

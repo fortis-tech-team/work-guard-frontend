@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import { useAuthStore } from '@/stores/auth'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const routes = [
   {
@@ -24,26 +24,26 @@ const routes = [
     name: 'pageNotFound',
     component: () => import('../views/PageNotFound.vue'),
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
 
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
+  const authStore = useAuthStore();
 
   if (authStore.isFirstVisit) {
-    await authStore.monitorAuthState()
-    authStore.isFirstVisit = false
+    await authStore.monitorAuthState();
+    authStore.isFirstVisit = false;
   }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'signIn' }) // Redirect to login page
+    next({ name: 'signIn' }); // Redirect to login page
   } else {
-    next() // Allow pagination
+    next(); // Allow pagination
   }
-})
+});
 
-export default router
+export default router;
