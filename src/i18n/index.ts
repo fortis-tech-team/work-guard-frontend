@@ -1,4 +1,3 @@
-// src/i18n/index.ts
 import { createI18n } from 'vue-i18n'
 import pt from './locales/pt.ts'
 import en from './locales/pt.ts'

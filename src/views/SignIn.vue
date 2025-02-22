@@ -1,11 +1,14 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { signInUser } from '@/services/auth'
+import { onBeforeMount, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
+
+onBeforeMount(() => {
+  if (authStore.isAuthenticated) router.push({ name: 'home' })
+})
 
 const user = ref({
   email: '',

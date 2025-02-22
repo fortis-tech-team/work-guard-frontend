@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { createUserService, getUserByIdService } from '@/services/user'
+import { createUserService, getUserByIdService } from '@/services/user.service'
 import type { UserData } from '@/interfaces/models/User'
 import type { UserState } from '@/interfaces/store/UserState'
 import type { LoadingKey } from '@/interfaces/store/VariablesState'
@@ -24,8 +24,7 @@ export const useUserStore = defineStore('user', {
       return createUserService(user)
         .then((isCreated) => {
           if (isCreated) {
-            // TODO: Faca algo
-            // this.getUserById(user.uid)
+            this.user = user
           }
         })
         .catch((err) => (this.error = err.message || 'Erro ao criar conta'))
