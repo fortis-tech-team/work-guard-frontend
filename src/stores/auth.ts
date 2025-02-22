@@ -1,16 +1,21 @@
 import { defineStore } from 'pinia'
 import { auth } from '@/firebase/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
-import { signInUser, signUpUser, signOutUser } from '@/services/auth'
-import type { AuthState, LoadingKey } from '@/interfaces/store/AuthState'
+import { signInUser, signUpUser, signOutUser } from '@/services/auth.service'
+import { useUserStore } from './user'
 
-import router from '@/router'
+import type { AuthState } from '@/interfaces/store/AuthState'
+import type { UserData } from '@/interfaces/models/User'
+
+import type { AuthData, RegisterParams } from '@/interfaces/models/Auth'
+import type { LoadingKey } from '@/interfaces/store/VariablesState'
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
     loading: {},
     error: null,
+    isFirstVisit: true,
   }),
 
   getters: {
@@ -21,17 +26,34 @@ export const useAuthStore = defineStore('auth', {
     setLoading({ name, isLoading }: { name: LoadingKey; isLoading: boolean }): void {
       this.loading = { ...this.loading, [name]: isLoading }
     },
-    register(email: string, password: string) {
+    register({ email, password, first_name }: RegisterParams) {
       this.setLoading({ name: 'create', isLoading: true })
       this.error = null
 
       return signUpUser({ email, password })
-        .then((data) => (this.user = data.user))
+        .then((data) => {
+          if (!data) return
+
+          this.user = data.user
+
+          const userData: UserData = {
+            uid: this.user.uid,
+            role: 'Admin',
+            first_name,
+            last_name: '',
+            position: '',
+          }
+
+          const userStore = useUserStore()
+          userStore.createUser(userData)
+
+          return true
+        })
         .catch((err) => (this.error = err.message || 'Erro ao criar conta'))
         .finally(() => this.setLoading({ name: 'create', isLoading: false }))
     },
 
-    login(email: string, password: string) {
+    login({ email, password }: AuthData) {
       this.setLoading({ name: 'login', isLoading: true })
       this.error = null
 
@@ -41,7 +63,7 @@ export const useAuthStore = defineStore('auth', {
         .finally(() => this.setLoading({ name: 'login', isLoading: false }))
     },
 
-    logout() {
+    logout(): Promise<void> {
       this.setLoading({ name: 'logout', isLoading: true })
       this.error = null
 
@@ -53,13 +75,24 @@ export const useAuthStore = defineStore('auth', {
 
     // Monitor changes in authentication state
     monitorAuthState() {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.user = user
-          router.push({ name: 'home' })
-        } else {
-          router.push({ name: 'signIn' })
-        }
+      return new Promise((resolve, reject) => {
+        this.setLoading({ name: 'get', isLoading: true })
+        onAuthStateChanged(
+          auth,
+          (user) => {
+            this.setLoading({ name: 'get', isLoading: false })
+            if (user) {
+              this.user = user
+              resolve(user)
+            } else {
+              this.user = null
+              resolve(null)
+            }
+          },
+          (error) => {
+            reject(error)
+          },
+        )
       })
     },
   },
