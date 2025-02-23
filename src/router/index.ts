@@ -11,13 +11,13 @@ const routes = [
   },
   {
     path: '/sign-up',
-    name: 'signUp',
+    name: 'sign-up',
     component: () => import('../views/SignUp.vue'),
   },
   {
     path: '/login',
-    name: 'signIn',
-    component: () => import('../views/SignIn.vue'),
+    name: 'login',
+    component: () => import('../views/Login.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
@@ -40,7 +40,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'signIn' }); // Redirect to login page
+    next({ name: 'login' }); // Redirect to login page
   } else {
     next(); // Allow pagination
   }

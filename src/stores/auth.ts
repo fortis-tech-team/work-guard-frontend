@@ -46,10 +46,11 @@ export const useAuthStore = defineStore('auth', {
 
           const userStore = useUserStore();
           userStore.createUser(userData);
-
-          return true;
         })
-        .catch((err) => (this.error = err.message || 'Erro ao criar conta'))
+        .catch((err) => {
+          this.error = err.message || 'Erro ao criar conta';
+          throw new Error(err);
+        })
         .finally(() => this.setLoading({ name: 'create', isLoading: false }));
     },
 
@@ -59,7 +60,10 @@ export const useAuthStore = defineStore('auth', {
 
       return signInUser({ email, password })
         .then((data) => (this.user = data.user))
-        .catch((err) => (this.error = err.message || 'Erro ao fazer login'))
+        .catch((err) => {
+          this.error = err.message || 'Erro ao fazer login';
+          throw new Error(err);
+        })
         .finally(() => this.setLoading({ name: 'login', isLoading: false }));
     },
 

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useAuthStore } from '@/stores/auth';
 import { onBeforeMount, ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
-const router = useRouter();
 const authStore = useAuthStore();
+const router = useRouter();
 
 onBeforeMount(() => {
   if (authStore.isAuthenticated) router.push({ name: 'home' });
@@ -13,11 +13,10 @@ onBeforeMount(() => {
 const user = ref({
   email: '',
   password: '',
-  first_name: '',
 });
 
-async function signUp() {
-  authStore.register(user.value).then(() => {
+async function signIn() {
+  authStore.login(user.value).then(() => {
     router.push({ name: 'home' });
   });
 }
@@ -26,29 +25,21 @@ async function signUp() {
 scr
 
 <template>
-  <v-form @submit.prevent="signUp">
+  <v-form @submit.prevent="signIn">
     <v-container>
       <v-row justify="center">
         <v-col cols="12" md="4">
           <v-text-field
-            id="first_name"
-            v-model="user.first_name"
-            :readonly="authStore.loading.create"
-            label="Name"
-            clearable
-            required
-          />
-          <v-text-field
             id="email"
             v-model="user.email"
-            :readonly="authStore.loading.create"
+            :readonly="authStore.loading.login"
             label="E-mail"
             clearable
             required
           />
           <v-text-field
             v-model="user.password"
-            :readonly="authStore.loading.create"
+            :readonly="authStore.loading.login"
             :counter="10"
             label="Last name"
             type="password"
@@ -57,23 +48,23 @@ scr
             clearable
           />
           <v-btn
-            :loading="authStore.loading.create"
+            :loading="authStore.loading.login"
             size="large"
-            variant="elevated"
             type="submit"
+            variant="elevated"
             block
           >
-            Cadastrar
+            Sign In
           </v-btn>
           <v-btn
-            class="mt-5"
-            :readonly="authStore.loading.create"
+            :readonly="authStore.loading.login"
             size="large"
             variant="elevated"
             block
-            @click="router.push({ name: 'login' })"
+            class="mt-5"
+            @click="router.push({ name: 'sign-up' })"
           >
-            Fazer login
+            Cadastrar
           </v-btn>
         </v-col>
       </v-row>
