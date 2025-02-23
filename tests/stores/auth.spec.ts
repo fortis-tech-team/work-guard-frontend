@@ -1,5 +1,5 @@
-import { describe, it } from 'vitest'
+import { describe, it } from 'vitest';
 
 describe('Auth Store #STATE', () => {
-  it('Should write User var', () => {})
-})
+  it('Should write User var', () => {});
+});

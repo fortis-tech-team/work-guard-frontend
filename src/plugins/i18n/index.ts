@@ -1,6 +1,6 @@
-import { createI18n } from 'vue-i18n'
-import pt from './locales/pt.ts'
-import en from './locales/pt.ts'
+import { createI18n } from 'vue-i18n';
+import pt from './locales/pt.ts';
+import en from './locales/pt.ts';
 
 const i18n = createI18n({
   locale: 'pt', // Standart locale
@@ -9,6 +9,6 @@ const i18n = createI18n({
     pt,
     en,
   },
-})
+});
 
-export default i18n
+export default i18n;

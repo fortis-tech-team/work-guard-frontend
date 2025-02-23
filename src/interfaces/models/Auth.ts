@@ -1,10 +1,10 @@
 export declare interface AuthData {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export declare interface RegisterParams {
-  email: string
-  password: string
-  first_name: string
+  email: string;
+  password: string;
+  first_name: string;
 }

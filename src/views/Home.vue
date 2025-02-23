@@ -1,5 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main>Essa rota eh protegida</main>
+  <main>
+    <h1>Home</h1>
+  </main>
 </template>

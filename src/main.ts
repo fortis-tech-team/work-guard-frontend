@@ -1,21 +1,24 @@
-import './assets/main.css'
+import './assets/main.css';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import i18n from './i18n'
-import { useAuthStore } from './stores/auth'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 
-import App from './App.vue'
-import router from './router'
+import App from './App.vue';
+import router from './router';
+import i18n from './plugins/i18n';
+import vuetify from './plugins/vuetify';
 
-const app = createApp(App)
+import { useAuthStore } from './stores/auth';
 
-app.use(createPinia())
-app.use(router)
-app.use(i18n)
+const app = createApp(App);
+
+app.use(createPinia());
+app.use(router);
+app.use(i18n);
+app.use(vuetify);
 
 // Monitor authentication status
-const authStore = useAuthStore()
-authStore.monitorAuthState()
+const authStore = useAuthStore();
+authStore.monitorAuthState();
 
-app.mount('#app')
+app.mount('#app');
