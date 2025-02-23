@@ -6,6 +6,16 @@ import { ref } from 'vue';
 const authStore = useAuthStore();
 const router = useRouter();
 
+// Navigation control
+function changePage(page: unknown) {
+  if (Array.isArray(page) && page.length > 0 && typeof page[0] === 'string') {
+    const routerName = page[0];
+    router.push({ name: routerName });
+  } else {
+    router.push({ name: 'home' });
+  }
+}
+
 // Theme control
 const theme = ref('myCustomLightTheme');
 function handleTheme() {
@@ -20,20 +30,34 @@ async function logout() {
 </script>
 
 <template>
-  <v-responsive class="border rounded" max-height="500">
+  <v-responsive max-height="500">
     <v-app :theme="theme">
       <v-navigation-drawer rail expand-on-hover v-if="authStore.isAuthenticated">
-        <v-list>
-          <v-list-item title="Navigation drawer" />
+        <template v-slot:prepend>
+          <v-list-item
+            lines="two"
+            prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
+            subtitle="Logged in"
+            title="Jane Smith"
+          />
+        </template>
+
+        <v-divider />
+
+        <v-list density="compact" nav @update:selected="changePage">
+          <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" />
+          <v-list-item prepend-icon="mdi-account" title="My Account" value="account" />
+          <v-list-item
+            disabled
+            prepend-icon="mdi-account-group-outline"
+            title="Users"
+            value="users"
+          />
         </v-list>
       </v-navigation-drawer>
 
       <v-app-bar class="px-3" v-if="authStore.isAuthenticated">
         <v-app-bar-title>Work Guard</v-app-bar-title>
-
-        <RouterLink :to="{ name: 'home' }" v-if="authStore.isAuthenticated">Home</RouterLink>
-
-        <v-spacer />
 
         <v-btn
           :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
@@ -42,13 +66,7 @@ async function logout() {
           @click="handleTheme"
         />
 
-        <v-btn
-          @click="logout"
-          v-if="authStore.isAuthenticated"
-          prepend-icon="mdi-logout"
-          text="Logout"
-          slim
-        />
+        <v-btn @click="logout" prepend-icon="mdi-logout" text="Logout" slim />
       </v-app-bar>
 
       <v-main>
@@ -61,9 +79,4 @@ async function logout() {
   </v-responsive>
 </template>
 
-<style scoped>
-nav {
-  display: flex;
-  gap: 1rem;
-}
-</style>
+<style scoped></style>
