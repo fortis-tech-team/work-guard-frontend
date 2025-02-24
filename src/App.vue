@@ -30,7 +30,7 @@ async function logout() {
 </script>
 
 <template>
-  <v-responsive max-height="500">
+  <v-responsive max-height="100%">
     <v-app :theme="theme">
       <v-navigation-drawer rail expand-on-hover v-if="authStore.isAuthenticated">
         <template v-slot:prepend>
