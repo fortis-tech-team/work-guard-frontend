@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { getRecommendationNRs } from '@/services/activity.service';
+import { getRecommendedNRs } from '@/services/activity.service';
 import { ref } from 'vue';
 
 const searchModel = ref('');
 function onSearch() {
-  getRecommendationNRs(searchModel.value).then((result) => {
+  getRecommendedNRs(searchModel.value).then((result) => {
     const data = result.data as string;
     console.log('data', data);
   });
