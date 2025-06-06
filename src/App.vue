@@ -38,7 +38,7 @@ async function logout() {
             lines="two"
             prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
             subtitle="Logged in"
-            title="Jane Smith"
+            :title="authStore.user?.displayName || 'Bem-vindo'"
           />
         </template>
 
@@ -60,7 +60,7 @@ async function logout() {
         <v-app-bar-title>Work Guard</v-app-bar-title>
 
         <v-btn
-          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+          :prepend-icon="theme === 'myCustomLightTheme' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
           text="Toggle Theme"
           slim
           @click="handleTheme"

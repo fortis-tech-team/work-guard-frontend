@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { auth } from '@/firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { signInUser, signUpUser, signOutUser } from '@/services/auth.service';
+import { signInUser, signUpUser, signOutUser, updateUserProfile } from '@/services/auth.service';
 import { useUserStore } from './user';
 
 import type { AuthState } from '@/interfaces/store/AuthState';
@@ -46,6 +46,7 @@ export const useAuthStore = defineStore('auth', {
 
           const userStore = useUserStore();
           userStore.createUser(userData);
+          updateUserProfile(data.user, first_name);
         })
         .catch((err) => {
           this.error = err.message || 'Erro ao criar conta';
