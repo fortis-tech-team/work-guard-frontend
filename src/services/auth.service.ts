@@ -70,14 +70,10 @@ export const updateUserProfile = (
   displayName?: string,
   photoURL?: string,
 ): Promise<void> => {
-  return updateProfile(user, { displayName, photoURL })
-    .then(() => {
-      console.log('Perfil atualizado com sucesso!');
-    })
-    .catch((error) => {
-      console.error('Erro ao atualizar perfil:', error.message);
-      throw new Error(error.message);
-    });
+  return updateProfile(user, { displayName, photoURL }).catch((error) => {
+    console.error('Erro ao atualizar perfil:', error.message);
+    throw new Error(error.message);
+  });
 };
 
 /**
@@ -85,14 +81,10 @@ export const updateUserProfile = (
  * @param {User} user - The user object from Firebase Authentication.
  */
 export const sendUserEmailVerification = (user: User): Promise<void> => {
-  return sendEmailVerification(user)
-    .then(() => {
-      console.log('E-mail de verificação enviado com sucesso!');
-    })
-    .catch((error) => {
-      console.error('Erro ao enviar e-mail de verificação:', error.message);
-      throw new Error(error.message);
-    });
+  return sendEmailVerification(user).catch((error) => {
+    console.error('Erro ao enviar e-mail de verificação:', error.message);
+    throw new Error(error.message);
+  });
 };
 
 /**

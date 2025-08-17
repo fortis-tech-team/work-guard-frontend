@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia';
 import { auth } from '@/firebase/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { signInUser, signUpUser, signOutUser, updateUserProfile } from '@/services/auth.service';
+import {
+  signInUser,
+  signUpUser,
+  signOutUser,
+  updateUserProfile,
+  sendUserEmailVerification,
+} from '@/services/auth.service';
 import { useUserStore } from './user';
 
 import type { AuthState } from '@/interfaces/store/AuthState';
@@ -20,6 +26,7 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAuthenticated: (state) => !!state.user,
+    isEmailVerified: (state) => !!state.user?.emailVerified,
   },
 
   actions: {
@@ -99,6 +106,24 @@ export const useAuthStore = defineStore('auth', {
           },
         );
       });
+    },
+
+    verifyEmail(): Promise<void> {
+      this.setLoading({ name: 'update', isLoading: true });
+      this.error = null;
+
+      if (!this.user) {
+        this.setLoading({ name: 'update', isLoading: false });
+        this.error = 'Usuário não autenticado';
+        return Promise.reject(new Error('Usuário não autenticado'));
+      }
+
+      return sendUserEmailVerification(this.user)
+        .catch((err) => {
+          this.error = err.message || 'Erro ao enviar e-mail de verificação';
+          throw new Error(err);
+        })
+        .finally(() => this.setLoading({ name: 'update', isLoading: false }));
     },
   },
 });

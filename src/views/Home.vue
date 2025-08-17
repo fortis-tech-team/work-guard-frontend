@@ -33,8 +33,8 @@ function onSearch() {
       <v-col>
         <h2>Qual a sua tarefa de hoje?</h2>
         <v-text-field
-          :error="!!errorStatus"
-          :messages="errorStatus || ''"
+          :error="workPermissionStore.error || errorStatus"
+          :messages="workPermissionStore.error || errorStatus || ''"
           v-model="searchModel"
           variant="outlined"
           :loading="workPermissionStore.loading.get"

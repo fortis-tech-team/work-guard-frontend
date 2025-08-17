@@ -49,7 +49,7 @@ scr
           v-model="user.password"
           :readonly="authStore.loading.create"
           :counter="10"
-          label="Last name"
+          label="Password"
           type="password"
           id="password"
           required
