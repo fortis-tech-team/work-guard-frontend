@@ -9,6 +9,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/pt/criar',
+    name: 'create-work-permission',
+    component: () => import('../views/work-permission/CreateWorkPermission.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/account',
     name: 'account',
     component: () => import('../views/Account.vue'),
