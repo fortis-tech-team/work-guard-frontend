@@ -26,6 +26,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Create .env file from prefixed secrets
+        run: |
+          echo "Generating.env.production files from secrets..."
+          echo "${{ toJSON(secrets) }}" | jq -r 'to_entries[] | select(.key | startswith("VITE_")) | "\(.key)=\(.value)"' >> .env.production
+
       - name: Install dependencies
         run: npm install
 
