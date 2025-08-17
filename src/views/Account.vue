@@ -21,53 +21,70 @@ const reloadPage = () => {
 </script>
 
 <template>
-  <v-row v-if="!authStore.isEmailVerified">
-    <v-col cols="12" md="12">
-      <v-alert type="info" class="mb-4">
-        Para acessar todas as funcionalidades, você precisa verificar seu e-mail. Clique no botão
-        abaixo para receber o e-mail de verificação.
-      </v-alert>
-    </v-col>
+  <v-row justify="center" v-if="user && !authStore.isEmailVerified">
+    <v-col cols="12" md="7" lg="5">
+      <v-sheet elevation="4" class="pa-8 rounded-xl" color="grey-lighten-5">
+        <div class="d-flex align-center justify-center mb-4">
+          <v-icon color="primary" size="40">mdi-email-alert</v-icon>
+          <span class="ml-3 text-h5 font-weight-bold">Verifique seu E-mail</span>
+        </div>
+        <v-divider class="mb-4" />
 
-    <v-col cols="12" md="6">
-      <v-card color="white">
-        <v-card-title> Verificação de E-mail </v-card-title>
-        <v-card-text>
-          <div v-if="user">
-            <p>
-              Seu e-mail: <strong>{{ user.email }}</strong>
-            </p>
-            <v-alert v-if="success" type="success" class="mb-2">
-              E-mail de verificação enviado! Atualize a pagina apos verificar seu e-mail.
-            </v-alert>
-            <v-alert v-if="error" type="error" class="mb-2">
-              {{ error }}
-            </v-alert>
+        <v-alert type="info" variant="tonal" class="mb-4" border="start" prominent>
+          Para acessar todas as funcionalidades, verifique seu e-mail. Clique no botão abaixo para
+          receber o e-mail de verificação.
+        </v-alert>
 
+        <div>
+          <v-list-item class="mb-2">
+            <template #prepend>
+              <v-avatar color="primary" size="32">
+                <v-icon>mdi-account</v-icon>
+              </v-avatar>
+            </template>
+            <v-list-item-title>
+              <span class="font-weight-medium">E-mail:</span>
+              <span class="ml-1">{{ user.email }}</span>
+            </v-list-item-title>
+          </v-list-item>
+          <v-alert v-if="success" type="success" class="mb-2" border="start" variant="tonal">
+            E-mail de verificação enviado! Após verificar, clique em "Atualizar página".
+          </v-alert>
+          <v-alert v-if="error" type="error" class="mb-2" border="start" variant="tonal">
+            {{ error }}
+          </v-alert>
+
+          <div class="d-flex flex-column align-center">
             <v-btn
-              v-if="success === false"
+              v-if="!success"
               :loading="loading"
               color="primary"
+              size="large"
+              class="mb-2"
               @click="handleVerifyEmail"
+              prepend-icon="mdi-email-send"
             >
               Enviar verificação
             </v-btn>
-            <v-btn v-else class="mt-2" @click="reloadPage"> Atualizar pagina </v-btn>
+            <v-btn
+              v-else
+              color="success"
+              size="large"
+              class="mb-2"
+              @click="reloadPage"
+              prepend-icon="mdi-refresh"
+            >
+              Atualizar página
+            </v-btn>
           </div>
-          <div v-else>
-            <v-alert type="warning" variant="tonal">
-              Você precisa estar autenticado para verificar o e-mail.
-            </v-alert>
-          </div>
-        </v-card-text>
-      </v-card>
+        </div>
+      </v-sheet>
     </v-col>
   </v-row>
-
   <v-row v-if="authStore.isEmailVerified">
-    <v-col cols="12" md="12">
-      <v-alert type="success" class="mb-4">
-        Email verificado com sucesso! Você agora tem acesso a todas as funcionalidades.
+    <v-col class="text-center mt-4">
+      <v-alert type="success" variant="tonal" class="mb-4" border="start" prominent>
+        E-mail verificado com sucesso! Você agora tem acesso total à aplicação.
       </v-alert>
     </v-col>
   </v-row>

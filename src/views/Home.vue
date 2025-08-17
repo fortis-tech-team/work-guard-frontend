@@ -31,7 +31,7 @@ function onSearch() {
   <v-form @submit.prevent="onSearch">
     <v-row class="mt-6">
       <v-col>
-        <h2>Qual a sua tarefa de hoje?</h2>
+        <h4>Qual a sua tarefa de hoje?</h4>
         <v-text-field
           :error="workPermissionStore.error || errorStatus"
           :messages="workPermissionStore.error || errorStatus || ''"
