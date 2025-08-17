@@ -6,7 +6,17 @@ import { httpsCallable, type HttpsCallableResult } from 'firebase/functions';
  * @param {string} activity - User activity input.
  */
 export const getRecommendedNRs = (activity: string): Promise<HttpsCallableResult<unknown>> => {
-  const getSafetyWorkPrompt = httpsCallable(functions, 'getSafetyWorkPrompt');
+  const generateSafetyWork = httpsCallable(functions, 'generateSafetyWork');
 
-  return getSafetyWorkPrompt({ activity });
+  return generateSafetyWork({ activity });
+};
+
+/**
+ * Function to get recommended NRs for activity.
+ * @param {string} activity - User activity input.
+ */
+export const getWorkPermission = (activity: string): Promise<HttpsCallableResult<unknown>> => {
+  const generateWorkPermission = httpsCallable(functions, 'generateWorkPermission');
+
+  return generateWorkPermission({ activity });
 };

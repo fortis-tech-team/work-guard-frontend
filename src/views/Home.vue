@@ -1,13 +1,27 @@
 <script setup lang="ts">
-import { getRecommendedNRs } from '@/services/activity.service';
+import router from '@/router';
+import { useWorkPermissionStore } from '@/stores/work-permission';
 import { ref } from 'vue';
 
+const workPermissionStore = useWorkPermissionStore();
+
 const searchModel = ref('');
+const errorStatus = ref<string | null>(null);
+
 function onSearch() {
-  getRecommendedNRs(searchModel.value).then((result) => {
-    const data = result.data as string;
-    console.log('data', data);
-  });
+  workPermissionStore
+    .getWorkPermission(searchModel.value)
+    .then((result) => {
+      const data = result;
+      if (data.status === 'success') {
+        router.push({ name: 'create-work-permission' });
+      } else {
+        errorStatus.value = data.error?.message || 'Erro ao gerar a permissão de trabalho.';
+      }
+    })
+    .catch((error) => {
+      errorStatus.value = error.message || 'Erro ao buscar a permissão de trabalho.';
+    });
 }
 </script>
 
@@ -17,7 +31,15 @@ function onSearch() {
   <v-form @submit.prevent="onSearch">
     <v-row class="mt-6">
       <v-col>
-        <v-text-field v-model="searchModel" label="Search AI" variant="outlined" />
+        <h2>Qual a sua tarefa de hoje?</h2>
+        <v-text-field
+          :error="!!errorStatus"
+          :messages="errorStatus || ''"
+          v-model="searchModel"
+          variant="outlined"
+          :loading="workPermissionStore.loading.get"
+          :disabled="workPermissionStore.loading.get"
+        />
       </v-col>
     </v-row>
 
