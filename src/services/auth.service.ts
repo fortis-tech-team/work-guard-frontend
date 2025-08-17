@@ -4,7 +4,12 @@ import {
   signInWithEmailAndPassword,
   signOut,
   validatePassword,
+  updateProfile,
+  sendEmailVerification,
+  updatePassword,
+  sendPasswordResetEmail,
   type UserCredential,
+  type User,
 } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import type { AuthData } from '@/interfaces/models/Auth';
@@ -50,6 +55,73 @@ export const signOutUser = async (): Promise<void> => {
     .then((data) => data)
     .catch((error) => {
       console.error('Erro ao fazer logout:', error.message);
+      throw new Error(error.message);
+    });
+};
+
+/**
+ * Function to update user profile information.
+ * @param {User} user - The user object from Firebase Authentication.
+ * @param {string} displayName - The new display name for the user.
+ * @param {string} photoURL - The new photo URL for the user.
+ */
+export const updateUserProfile = (
+  user: User,
+  displayName?: string,
+  photoURL?: string,
+): Promise<void> => {
+  return updateProfile(user, { displayName, photoURL })
+    .then(() => {
+      console.log('Perfil atualizado com sucesso!');
+    })
+    .catch((error) => {
+      console.error('Erro ao atualizar perfil:', error.message);
+      throw new Error(error.message);
+    });
+};
+
+/**
+ * Function to send an email verification to the authenticated user.
+ * @param {User} user - The user object from Firebase Authentication.
+ */
+export const sendUserEmailVerification = (user: User): Promise<void> => {
+  return sendEmailVerification(user)
+    .then(() => {
+      console.log('E-mail de verificação enviado com sucesso!');
+    })
+    .catch((error) => {
+      console.error('Erro ao enviar e-mail de verificação:', error.message);
+      throw new Error(error.message);
+    });
+};
+
+/**
+ * Function to update the password of the authenticated user.
+ * @param {User} user - The user object from Firebase Authentication.
+ * @param {string} newPassword - The new password for the user.
+ */
+export const updateUserPassword = (user: User, newPassword: string): Promise<void> => {
+  return updatePassword(user, newPassword)
+    .then(() => {
+      console.log('Senha atualizada com sucesso!');
+    })
+    .catch((error) => {
+      console.error('Erro ao atualizar senha:', error.message);
+      throw new Error(error.message);
+    });
+};
+
+/**
+ * Function to send a password reset email to the user.
+ * @param {string} email - The email address of the user.
+ */
+export const sendUserPasswordResetEmail = (email: string): Promise<void> => {
+  return sendPasswordResetEmail(auth, email)
+    .then(() => {
+      console.log('E-mail de redefinição de senha enviado com sucesso!');
+    })
+    .catch((error) => {
+      console.error('Erro ao enviar e-mail de redefinição de senha:', error.message);
       throw new Error(error.message);
     });
 };
