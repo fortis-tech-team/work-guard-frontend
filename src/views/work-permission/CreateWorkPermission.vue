@@ -1,59 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useWorkPermissionStore } from '@/stores/work-permission';
+import type { PTResponse, PTData } from '@/interfaces/models/WorkPermission';
 
 const workPermissionStore = useWorkPermissionStore();
 
-// --- TYPE DEFINITIONS for the PT JSON structure ---
-interface Field {
-  id: string;
-  label: string;
-  inputType: 'text' | 'textarea' | 'datetime-local' | 'signature';
-  placeholder?: string;
-}
-
-interface ChecklistItem {
-  id: string;
-  label: string;
-}
-
-interface ChecklistGroup {
-  groupTitle: string;
-  // items: ChecklistItem[];
-  items: string[];
-}
-
-interface SectionContent {
-  fields?: Field[];
-  risks?: string[];
-  groups?: ChecklistGroup[];
-  declaration?: string;
-}
-
-interface Section {
-  sectionId: string;
-  sectionTitle: string;
-  type: 'form_group' | 'risk_list' | 'checklist_group' | 'signature_area';
-  layout: 'full' | 'half';
-  content: SectionContent;
-}
-
-interface PTData {
-  ptId: string;
-  activityTitle: string;
-  version: string;
-  sections: Section[];
-}
-
-interface PTResponse {
-  status: 'success';
-  data: PTData;
-}
-
-const ptJsonData: PTResponse = workPermissionStore.workPermission;
+const ptJsonData: Partial<PTResponse> = workPermissionStore.workPermission;
 
 // Create a reactive reference to the PT data
-const ptData = ref<PTData>(ptJsonData.data);
+const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
 </script>
 
 <template>
