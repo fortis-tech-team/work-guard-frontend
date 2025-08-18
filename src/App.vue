@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import { inject } from 'vue';
+import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from './stores/auth';
 import { ref } from 'vue';
 
+const { mobile } = useDisplay();
 const authStore = useAuthStore();
 const router = useRouter();
 
 // Navigation control
-const drawer = ref(false);
+const drawer = ref(!mobile.value);
 function changePage(page: unknown) {
   if (Array.isArray(page) && page.length > 0 && typeof page[0] === 'string') {
     const routerName = page[0];
@@ -35,7 +38,7 @@ async function logout() {
     <v-app :theme="theme">
       <v-navigation-drawer
         v-model="drawer"
-        :rail="!$vuetify.display.mobile"
+        :rail="!mobile"
         expand-on-hover
         v-if="authStore.isAuthenticated"
       >
@@ -63,11 +66,7 @@ async function logout() {
       </v-navigation-drawer>
 
       <v-app-bar class="px-3" v-if="authStore.isAuthenticated">
-        <v-app-bar-nav-icon
-          v-if="$vuetify.display.mobile"
-          variant="text"
-          @click.stop="drawer = !drawer"
-        />
+        <v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer = !drawer" />
         <v-app-bar-title>Work Guard</v-app-bar-title>
 
         <v-btn
