@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { useWorkPermissionStore } from '@/stores/work-permission';
 import type { PTResponse, PTData } from '@/interfaces/models/WorkPermission';
 
-const workPermissionStore = useWorkPermissionStore();
+onUnmounted(() => {
+  workPermissionStore.$reset();
+});
 
+const workPermissionStore = useWorkPermissionStore();
 const ptJsonData: Partial<PTResponse> = workPermissionStore.workPermission;
 
 // Create a reactive reference to the PT data
