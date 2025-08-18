@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useAuthStore } from '@/stores/auth';
 import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
-const router = useRouter();
 const authStore = useAuthStore();
+const router = useRouter();
 
 onBeforeMount(() => {
   if (authStore.isAuthenticated) router.push({ name: 'home' });
@@ -20,6 +20,11 @@ async function signUp() {
   authStore.register(user.value).then(() => {
     router.push({ name: 'home' });
   });
+}
+
+async function signIn() {
+  router.push({ name: 'login' });
+  authStore.$reset();
 }
 </script>
 
@@ -55,6 +60,13 @@ scr
           required
           clearable
         />
+        <v-alert
+          v-if="authStore.error"
+          class="mb-3"
+          :text="authStore.error"
+          type="error"
+          variant="tonal"
+        />
         <v-btn
           :loading="authStore.loading.create"
           size="large"
@@ -70,7 +82,7 @@ scr
           size="large"
           variant="elevated"
           block
-          @click="router.push({ name: 'login' })"
+          @click="signIn"
         >
           Fazer login
         </v-btn>

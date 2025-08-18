@@ -20,6 +20,11 @@ async function signIn() {
     router.push({ name: 'home' });
   });
 }
+
+async function signUp() {
+  router.push({ name: 'sign-up' });
+  authStore.$reset();
+}
 </script>
 
 <template>
@@ -38,11 +43,18 @@ async function signIn() {
           v-model="user.password"
           :readonly="authStore.loading.login"
           :counter="10"
-          label="Last name"
+          label="Senha"
           type="password"
           id="password"
           required
           clearable
+        />
+        <v-alert
+          v-if="authStore.error"
+          class="mb-3"
+          :text="authStore.error"
+          type="error"
+          variant="tonal"
         />
         <v-btn
           :loading="authStore.loading.login"
@@ -59,7 +71,7 @@ async function signIn() {
           variant="elevated"
           block
           class="mt-5"
-          @click="router.push({ name: 'sign-up' })"
+          @click="signUp"
         >
           Cadastrar
         </v-btn>
