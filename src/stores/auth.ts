@@ -16,13 +16,17 @@ import type { UserData } from '@/interfaces/models/User';
 import type { AuthData, RegisterParams } from '@/interfaces/models/Auth';
 import type { LoadingKey } from '@/interfaces/store/VariablesState';
 
-export const useAuthStore = defineStore('auth', {
-  state: (): AuthState => ({
+function getInitialState(): AuthState {
+  return {
     user: null,
     loading: {},
     error: null,
     isFirstVisit: true,
-  }),
+  };
+}
+
+export const useAuthStore = defineStore('auth', {
+  state: (): AuthState => getInitialState(),
 
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -124,6 +128,10 @@ export const useAuthStore = defineStore('auth', {
           throw new Error(err);
         })
         .finally(() => this.setLoading({ name: 'update', isLoading: false }));
+    },
+
+    $reset(): void {
+      Object.assign(this, getInitialState());
     },
   },
 });
