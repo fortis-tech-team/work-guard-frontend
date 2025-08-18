@@ -28,7 +28,7 @@ function handleTheme() {
 // Logout
 async function logout() {
   await authStore.logout();
-  router.push({ name: 'login' });
+  window.location.reload();
 }
 </script>
 
@@ -44,10 +44,13 @@ async function logout() {
         <template v-slot:prepend>
           <v-list-item
             lines="two"
-            prepend-avatar="https://randomuser.me/api/portraits/women/81.jpg"
             subtitle="Logged in"
             :title="authStore.user?.displayName || 'Bem-vindo'"
-          />
+          >
+            <template #prepend>
+              <v-avatar icon="mdi mdi-account-circle" />
+            </template>
+          </v-list-item>
         </template>
 
         <v-divider />
@@ -55,12 +58,6 @@ async function logout() {
         <v-list density="compact" nav @update:selected="changePage">
           <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" />
           <v-list-item prepend-icon="mdi-account" title="My Account" value="account" />
-          <v-list-item
-            disabled
-            prepend-icon="mdi-account-group-outline"
-            title="Users"
-            value="users"
-          />
         </v-list>
       </v-navigation-drawer>
 
@@ -69,13 +66,22 @@ async function logout() {
         <v-app-bar-title>Work Guard</v-app-bar-title>
 
         <v-btn
+          v-if="!mobile"
           :prepend-icon="theme === 'myCustomLightTheme' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
           text="Toggle Theme"
           slim
           @click="handleTheme"
         />
 
-        <v-btn @click="logout" prepend-icon="mdi-logout" text="Logout" slim />
+        <v-btn
+          v-else
+          aria-label="Toggle Theme"
+          :icon="theme === 'myCustomLightTheme' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
+          @click="handleTheme"
+        />
+
+        <v-btn v-if="!mobile" @click="logout" prepend-icon="mdi-logout" text="Logout" slim />
+        <v-btn aria-label="Logout" v-else @click="logout" icon="mdi-logout" />
       </v-app-bar>
 
       <v-main>
