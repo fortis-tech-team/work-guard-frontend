@@ -7,6 +7,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 // Navigation control
+const drawer = ref(false);
 function changePage(page: unknown) {
   if (Array.isArray(page) && page.length > 0 && typeof page[0] === 'string') {
     const routerName = page[0];
@@ -32,7 +33,12 @@ async function logout() {
 <template>
   <v-responsive max-height="100%">
     <v-app :theme="theme">
-      <v-navigation-drawer rail expand-on-hover v-if="authStore.isAuthenticated">
+      <v-navigation-drawer
+        v-model="drawer"
+        :rail="!$vuetify.display.mobile"
+        expand-on-hover
+        v-if="authStore.isAuthenticated"
+      >
         <template v-slot:prepend>
           <v-list-item
             lines="two"
@@ -57,6 +63,11 @@ async function logout() {
       </v-navigation-drawer>
 
       <v-app-bar class="px-3" v-if="authStore.isAuthenticated">
+        <v-app-bar-nav-icon
+          v-if="$vuetify.display.mobile"
+          variant="text"
+          @click.stop="drawer = !drawer"
+        />
         <v-app-bar-title>Work Guard</v-app-bar-title>
 
         <v-btn
