@@ -33,20 +33,43 @@ function onSearch() {
       <v-col>
         <h4>Qual a sua tarefa de hoje?</h4>
         <v-text-field
-          :error="workPermissionStore.error || errorStatus"
+          :error="!!workPermissionStore.error || !!errorStatus"
           :messages="workPermissionStore.error || errorStatus || ''"
           v-model="searchModel"
           variant="outlined"
           :loading="workPermissionStore.loading.get"
           :disabled="workPermissionStore.loading.get"
+          class="mt-2"
         />
       </v-col>
     </v-row>
 
     <v-row>
       <v-col>
-        <v-btn size="large" variant="tonal" block type="submit"> Pesquisar </v-btn>
+        <v-btn
+          :loading="workPermissionStore.loading.get"
+          size="large"
+          variant="tonal"
+          block
+          type="submit"
+        >
+          Pesquisar
+        </v-btn>
       </v-col>
     </v-row>
   </v-form>
+
+  <v-col class="mt-6" v-if="!!workPermissionStore.workPermission.error?.suggestions.length">
+    <h4>Sugestoes:</h4>
+    <v-list bg-color="white">
+      <v-list-item
+        v-for="(item, index) in workPermissionStore.workPermission.error?.suggestions"
+        :key="index"
+      >
+        <v-list-item-content>
+          <v-list-item-title>{{ item }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-col>
 </template>
