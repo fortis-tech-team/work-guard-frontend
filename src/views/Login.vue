@@ -22,8 +22,6 @@ async function signIn() {
 }
 </script>
 
-scr
-
 <template>
   <v-form @submit.prevent="signIn">
     <v-row justify="center">
@@ -53,7 +51,7 @@ scr
           variant="elevated"
           block
         >
-          Sign In
+          Entrar
         </v-btn>
         <v-btn
           :readonly="authStore.loading.login"

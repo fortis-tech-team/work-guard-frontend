@@ -1,3 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200&display=swap');
 body {
-  /* font-family: 'Roboto', sans-serif; */
+  font-family: 'Urbanist', sans-serif;
+}
+
+/* Títulos e destaques */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.title,
+.headline,
+.font-unbounded {
+  /* font-family: 'Unbounded', sans-serif; */
+  font-family: 'Urbanist', sans-serif;
 }
