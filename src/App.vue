@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { inject } from 'vue';
 import { useDisplay } from 'vuetify';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from './stores/auth';
