@@ -19,8 +19,8 @@ export const useWorkPermissionStore = defineStore('workPermission', {
     setLoading({ name, isLoading }: { name: LoadingKey; isLoading: boolean }): void {
       this.loading = { ...this.loading, [name]: isLoading };
     },
-    getWorkPermission(activity: string): Promise<PTResponse> {
-      this.setLoading({ name: 'get', isLoading: true });
+    generateWorkPermission(activity: string): Promise<PTResponse> {
+      this.setLoading({ name: 'generate', isLoading: true });
       this.error = null;
 
       return getWorkPermissionService(activity)
@@ -29,7 +29,7 @@ export const useWorkPermissionStore = defineStore('workPermission', {
           return this.workPermission;
         })
         .catch((err) => (this.error = err.message || 'Erro ao criar permissão de trabalho'))
-        .finally(() => this.setLoading({ name: 'get', isLoading: false }));
+        .finally(() => this.setLoading({ name: 'generate', isLoading: false }));
     },
     $reset(): void {
       Object.assign(this, getInitialState());

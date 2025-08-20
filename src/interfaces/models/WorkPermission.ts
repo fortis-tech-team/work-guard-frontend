@@ -33,13 +33,13 @@ interface ErrorDetails {
 }
 
 export interface PTData {
-  ptId: string;
   activityTitle: string;
   version: string;
   sections: Section[];
 }
 
 export interface PTResponse {
+  uid?: string;
   status: 'success' | 'error';
   data?: PTData;
   error?: ErrorDetails;

@@ -10,7 +10,7 @@ const errorStatus = ref<string | null>(null);
 
 function onSearch() {
   workPermissionStore
-    .getWorkPermission(searchModel.value)
+    .generateWorkPermission(searchModel.value)
     .then((result) => {
       const data = result;
       if (data.status === 'success') {
@@ -37,8 +37,8 @@ function onSearch() {
           :messages="workPermissionStore.error || errorStatus || ''"
           v-model="searchModel"
           variant="outlined"
-          :loading="workPermissionStore.loading.get"
-          :disabled="workPermissionStore.loading.get"
+          :loading="workPermissionStore.loading.generate"
+          :disabled="workPermissionStore.loading.generate"
           class="mt-2"
         />
       </v-col>
@@ -47,7 +47,7 @@ function onSearch() {
     <v-row>
       <v-col>
         <v-btn
-          :loading="workPermissionStore.loading.get"
+          :loading="workPermissionStore.loading.generate"
           size="large"
           variant="tonal"
           block
