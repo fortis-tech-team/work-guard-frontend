@@ -32,15 +32,17 @@ interface ErrorDetails {
   suggestions: string[];
 }
 
-export interface PTData {
-  activityTitle: string;
-  version: string;
-  sections: Section[];
-}
+export type WorkPermissionData =
+  | {
+      uid?: string;
+      activityTitle: string;
+      version: string;
+      sections: Section[];
+    }
+  | undefined;
 
-export interface PTResponse {
-  uid?: string;
+export interface WorkPermissionResponse {
   status: 'success' | 'error';
-  data?: PTData;
+  data?: WorkPermissionData;
   error?: ErrorDetails;
 }

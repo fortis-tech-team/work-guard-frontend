@@ -1,8 +1,15 @@
-import type { PTResponse } from '../models/WorkPermission';
+import type { WorkPermissionData, WorkPermissionResponse } from '../models/WorkPermission';
 import type { LoadingState } from './VariablesState';
 
 export interface WorkPermissionState {
-  workPermission: Partial<PTResponse>;
+  workPermission: WorkPermissionData;
+  workPermissions: WorkPermissionData[];
+  loading: Partial<LoadingState>;
+  error: string | null;
+}
+
+export interface WorkPermissionGeneratesState {
+  generationWorkPermission: Partial<WorkPermissionResponse>;
   loading: Partial<LoadingState>;
   error: string | null;
 }
