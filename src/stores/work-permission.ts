@@ -1,11 +1,19 @@
 import { defineStore } from 'pinia';
-import { getWorkPermission as getWorkPermissionService } from '@/services/activity.service';
+import {
+  createWorkPermissionService,
+  getWorkPermissionByIdService,
+  getWorkPermissionsService,
+  updateWorkPermissionService,
+  deleteWorkPermissionService,
+} from '@/services/work-permission.service';
+
 import type { LoadingKey } from '@/interfaces/store/VariablesState';
-import type { PTResponse } from '@/interfaces/models/WorkPermission';
+import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
 import type { WorkPermissionState } from '@/interfaces/store/WorkPermissionState';
 
 const getInitialState = (): WorkPermissionState => ({
-  workPermission: {},
+  workPermission: undefined,
+  workPermissions: [],
   loading: {},
   error: null,
 });
@@ -19,17 +27,74 @@ export const useWorkPermissionStore = defineStore('workPermission', {
     setLoading({ name, isLoading }: { name: LoadingKey; isLoading: boolean }): void {
       this.loading = { ...this.loading, [name]: isLoading };
     },
-    generateWorkPermission(activity: string): Promise<PTResponse> {
-      this.setLoading({ name: 'generate', isLoading: true });
+    createWorkPermission(workPermission: WorkPermissionData) {
+      this.setLoading({ name: 'create', isLoading: true });
       this.error = null;
 
-      return getWorkPermissionService(activity)
+      return createWorkPermissionService(workPermission)
+        .then((isCreated) => {
+          if (isCreated) {
+            return true;
+          }
+        })
+        .catch((err) => (this.error = err.message || 'Erro ao criar permissão'))
+        .finally(() => this.setLoading({ name: 'create', isLoading: false }));
+    },
+
+    getWorkPermissionById(uid: string): Promise<WorkPermissionData> {
+      this.setLoading({ name: 'getById', isLoading: true });
+      this.error = null;
+
+      return getWorkPermissionByIdService(uid)
         .then((data) => {
-          this.workPermission = data.data as PTResponse;
+          this.workPermission = data as WorkPermissionData;
           return this.workPermission;
         })
-        .catch((err) => (this.error = err.message || 'Erro ao criar permissão de trabalho'))
-        .finally(() => this.setLoading({ name: 'generate', isLoading: false }));
+        .catch((err) => (this.error = err.message || 'Erro ao buscar permissão'))
+        .finally(() => this.setLoading({ name: 'getById', isLoading: false }));
+    },
+
+    getWorkPermissions(): Promise<WorkPermissionData[]> {
+      this.setLoading({ name: 'get', isLoading: true });
+      this.error = null;
+
+      return getWorkPermissionsService()
+        .then((data) => {
+          this.workPermissions = data as WorkPermissionData[];
+        })
+        .catch((err) => (this.error = err.message || 'Erro ao buscar permissões'))
+        .finally(() => this.setLoading({ name: 'get', isLoading: false }));
+    },
+
+    updateWorkPermission(uid: string, updates: Partial<WorkPermissionData>) {
+      this.setLoading({ name: 'update', isLoading: true });
+      this.error = null;
+
+      return updateWorkPermissionService(uid, updates)
+        .then(() => {
+          if (this.workPermission && this.workPermission.uid === uid) {
+            Object.assign(this.workPermission, updates);
+          }
+        })
+        .catch((err) => (this.error = err.message || 'Erro ao atualizar permissão'))
+        .finally(() => this.setLoading({ name: 'update', isLoading: false }));
+    },
+
+    deleteWorkPermission(uid: string) {
+      this.setLoading({ name: 'delete', isLoading: true });
+      this.error = null;
+
+      return deleteWorkPermissionService(uid)
+        .then(() => {
+          if (this.workPermissions) {
+            this.workPermissions = this.workPermissions.filter((wp) => wp?.uid !== uid);
+          }
+          if (this.workPermission && this.workPermission.uid === uid) {
+            this.workPermission = undefined;
+          }
+        })
+        .catch((err) => (this.error = err.message || 'Erro ao deletar permissão'))
+        .finally(() => this.setLoading({ name: 'delete', isLoading: false }));
     },
     $reset(): void {
       Object.assign(this, getInitialState());
