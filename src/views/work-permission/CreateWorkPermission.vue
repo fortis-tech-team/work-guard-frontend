@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onUnmounted, ref } from 'vue';
+import { usePrinter } from '@/composables/usePrinter';
 import { useWorkPermissionStore } from '@/stores/work-permission';
 
 import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
@@ -13,10 +14,46 @@ const ptJsonData: WorkPermissionData = workPermissionStore.workPermission;
 
 // Create a reactive reference to the PT data
 const ptData = ref<WorkPermissionData>(ptJsonData);
+
+// Function to print the work permission
+const { isPrinting, print } = usePrinter();
+
+// Save function to handle saving the work permission
+const snackbar = ref({
+  show: false,
+  message: '',
+  color: 'success',
+});
+function onSave() {
+  if (!ptData.value) return;
+  workPermissionStore
+    .createWorkPermission(ptData.value)
+    .then(() => {
+      snackbar.value = {
+        show: true,
+        message: 'Permissão de trabalho salva com sucesso!',
+        color: 'success',
+      };
+    })
+    .catch((err) => {
+      snackbar.value = {
+        show: true,
+        message: 'Erro ao salvar permissão de trabalho: ' + (err?.message || 'Erro desconhecido'),
+        color: 'error',
+      };
+    });
+}
 </script>
 
 <template>
-  <v-card class="mx-auto" max-width="900" elevation="4" color="white" v-if="ptData?.activityTitle">
+  <v-card
+    v-if="ptData"
+    id="create-work-permission"
+    class="mx-auto"
+    max-width="900"
+    elevation="4"
+    color="white"
+  >
     <v-card-title class="text-h4 text-center primary white--text py-4">
       Permissão de Trabalho (PT)
     </v-card-title>
@@ -96,14 +133,41 @@ const ptData = ref<WorkPermissionData>(ptJsonData);
     </v-card-text>
     <v-card-actions class="pa-6">
       <v-spacer />
-      <v-btn color="primary" size="x-large">Salvar</v-btn>
-      <v-btn v-if="false" color="primary" size="x-large"> Imprimir </v-btn>
+      <v-btn
+        id="save-work-permission"
+        color="primary"
+        size="x-large"
+        @click="onSave"
+        :loading="workPermissionStore.loading.create"
+        :disabled="workPermissionStore.loading.create"
+      >
+        Salvar
+      </v-btn>
+      <v-btn
+        id="print-work-permission"
+        color="primary"
+        size="x-large"
+        @click="print('create-work-permission')"
+        :loading="isPrinting"
+      >
+        Imprimir
+      </v-btn>
     </v-card-actions>
   </v-card>
 
   <v-alert v-else type="error" class="mt-4">
     Não foi possível carregar a Permissão de Trabalho. Por favor, tente novamente mais tarde.
   </v-alert>
+
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top end"
+    timeout="3500"
+    rounded
+  >
+    {{ snackbar.message }}
+  </v-snackbar>
 </template>
 
 <style>
