@@ -1,5 +1,5 @@
 import { db } from '@/firebase/firebase';
-import type { PTData } from '@/interfaces/models/WorkPermission';
+import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
 import {
   collection,
   doc,
@@ -18,7 +18,7 @@ const workPermissionCollection = collection(db, 'work-permission');
  * @param workPermission - An object containing work permission data.
  * @returns A Promise resolved when the work permission is created successfully.
  */
-export function createWorkPermissionService(workPermission: PTData): Promise<boolean> {
+export function createWorkPermissionService(workPermission: WorkPermissionData): Promise<boolean> {
   return setDoc(doc(workPermissionCollection), workPermission)
     .then(() => true)
     .catch((error) => {
@@ -51,10 +51,10 @@ export function getWorkPermissionByIdService(uid: string): Promise<DocumentData>
  * Reads all work permissions from Firestore.
  * @returns A Promise containing an array of work permission data.
  */
-export async function getAllWorkPermissionsService(): Promise<DocumentData[]> {
+export async function getWorkPermissionsService(): Promise<DocumentData[]> {
   try {
     const querySnapshot = await getDocs(workPermissionCollection);
-    return querySnapshot.docs.map(doc => doc.data());
+    return querySnapshot.docs.map((doc) => doc.data());
   } catch (error) {
     console.error('Error fetching work permissions:', error);
     throw error;
@@ -64,11 +64,16 @@ export async function getAllWorkPermissionsService(): Promise<DocumentData[]> {
 /**
  * Updates a work permission's data in Firestore.
  * @param uid - The work permission ID.
- * @param updates - An object containing the fields to update.
+ * @param workPermission - An object containing the fields to update.
  * @returns A Promise resolved when the data is successfully updated.
  */
-export function updateWorkPermissionService(uid: string, updates: Partial<PTData>): Promise<void> {
-  return updateDoc(doc(workPermissionCollection, uid), updates)
+export function updateWorkPermissionService(
+  uid: string,
+  workPermission: Partial<WorkPermissionData>,
+): Promise<void> {
+  if (!workPermission) return Promise.reject(new Error('No work permission provided for update'));
+
+  return updateDoc(doc(workPermissionCollection, uid), workPermission)
     .then(() => {
       console.log('Work permission updated successfully!');
     })
@@ -92,4 +97,4 @@ export function deleteWorkPermissionService(uid: string): Promise<void> {
       console.error('Error deleting work permission:', error);
       throw error;
     });
-  }
+}
