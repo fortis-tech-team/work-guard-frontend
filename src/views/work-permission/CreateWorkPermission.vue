@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { onUnmounted, ref } from 'vue';
 import { useWorkPermissionStore } from '@/stores/work-permission';
-import type { PTResponse, PTData } from '@/interfaces/models/WorkPermission';
+
+import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
 
 onUnmounted(() => {
   workPermissionStore.$reset();
 });
 
 const workPermissionStore = useWorkPermissionStore();
-const ptJsonData: Partial<PTResponse> = workPermissionStore.workPermission;
+const ptJsonData: WorkPermissionData = workPermissionStore.workPermission;
 
 // Create a reactive reference to the PT data
-const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
+const ptData = ref<WorkPermissionData>(ptJsonData);
 </script>
 
 <template>
-  <v-card class="mx-auto" max-width="900" elevation="4" color="white" v-if="ptData?.ptId">
+  <v-card class="mx-auto" max-width="900" elevation="4" color="white" v-if="ptData?.activityTitle">
     <v-card-title class="text-h4 text-center primary white--text py-4">
       Permissão de Trabalho (PT)
     </v-card-title>
@@ -95,7 +96,8 @@ const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
     </v-card-text>
     <v-card-actions class="pa-6">
       <v-spacer />
-      <v-btn color="primary" x-large>Emitir e Imprimir PT</v-btn>
+      <v-btn color="primary" size="x-large">Salvar</v-btn>
+      <v-btn v-if="false" color="primary" size="x-large"> Imprimir </v-btn>
     </v-card-actions>
   </v-card>
 
