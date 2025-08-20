@@ -63,7 +63,9 @@ async function logout() {
 
       <v-app-bar class="px-3" v-if="authStore.isAuthenticated">
         <v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer = !drawer" />
-        <v-app-bar-title>Work Guard</v-app-bar-title>
+        <v-app-bar-title class="cursor-pointer" @click="router.push({ name: 'home' })">
+          Work Guard
+        </v-app-bar-title>
 
         <v-btn
           v-if="!mobile"
