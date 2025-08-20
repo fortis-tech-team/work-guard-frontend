@@ -32,11 +32,6 @@ export const useWorkPermissionStore = defineStore('workPermission', {
       this.error = null;
 
       return createWorkPermissionService(workPermission)
-        .then((isCreated) => {
-          if (isCreated) {
-            return true;
-          }
-        })
         .catch((err) => (this.error = err.message || 'Erro ao criar permissão'))
         .finally(() => this.setLoading({ name: 'create', isLoading: false }));
     },

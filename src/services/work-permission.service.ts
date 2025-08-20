@@ -3,11 +3,12 @@ import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
 import {
   collection,
   doc,
-  setDoc,
   getDoc,
   updateDoc,
   deleteDoc,
   getDocs,
+  addDoc,
+  serverTimestamp,
   type DocumentData,
 } from 'firebase/firestore';
 
@@ -18,13 +19,16 @@ const workPermissionCollection = collection(db, 'work-permission');
  * @param workPermission - An object containing work permission data.
  * @returns A Promise resolved when the work permission is created successfully.
  */
-export function createWorkPermissionService(workPermission: WorkPermissionData): Promise<boolean> {
-  return setDoc(doc(workPermissionCollection), workPermission)
-    .then(() => true)
-    .catch((error) => {
-      console.error('Error creating work permission:', error);
-      throw error;
-    });
+export function createWorkPermissionService(
+  workPermission: WorkPermissionData,
+): Promise<DocumentData> {
+  return addDoc(workPermissionCollection, {
+    ...workPermission,
+    createdAt: serverTimestamp(),
+  }).catch((error) => {
+    console.error('Error creating work permission:', error);
+    throw error;
+  });
 }
 
 /**
