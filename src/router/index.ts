@@ -15,6 +15,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/permissao-trabalho',
+    name: 'list-work-permission',
+    component: () => import('../views/work-permission/ListWorkPermission.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/account',
     name: 'account',
     component: () => import('../views/Account.vue'),

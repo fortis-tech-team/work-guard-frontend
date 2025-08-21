@@ -57,6 +57,11 @@ async function logout() {
 
         <v-list density="compact" nav @update:selected="changePage">
           <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" />
+          <v-list-item
+            prepend-icon="mdi mdi-clipboard-text"
+            title="Permissoes de trabalho"
+            value="list-work-permission"
+          />
           <v-list-item prepend-icon="mdi-account" title="My Account" value="account" />
         </v-list>
       </v-navigation-drawer>
