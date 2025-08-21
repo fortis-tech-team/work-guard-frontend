@@ -33,14 +33,17 @@ export function createWorkPermissionService(
 
 /**
  * Reads work permission data from Firestore by ID.
- * @param uid - The work permission ID.
+ * @param id - The work permission ID.
  * @returns A Promise containing the work permission data if found.
  */
-export function getWorkPermissionByIdService(uid: string): Promise<DocumentData> {
-  return getDoc(doc(workPermissionCollection, uid))
+export function getWorkPermissionByIdService(id: string): Promise<DocumentData> {
+  return getDoc(doc(workPermissionCollection, id))
     .then((docSnap) => {
       if (docSnap.exists()) {
-        return docSnap.data();
+        return {
+          id: docSnap.id,
+          ...docSnap.data(),
+        };
       } else {
         throw new Error('Work permission not found.');
       }
@@ -55,29 +58,33 @@ export function getWorkPermissionByIdService(uid: string): Promise<DocumentData>
  * Reads all work permissions from Firestore.
  * @returns A Promise containing an array of work permission data.
  */
-export async function getWorkPermissionsService(): Promise<DocumentData[]> {
-  try {
-    const querySnapshot = await getDocs(workPermissionCollection);
-    return querySnapshot.docs.map((doc) => doc.data());
-  } catch (error) {
-    console.error('Error fetching work permissions:', error);
-    throw error;
-  }
+export function getWorkPermissionsService(): Promise<DocumentData[]> {
+  return getDocs(workPermissionCollection)
+    .then((querySnapshot) =>
+      querySnapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        ...docSnap.data(),
+      })),
+    )
+    .catch((error) => {
+      console.error('Error fetching work permissions:', error);
+      throw error;
+    });
 }
 
 /**
  * Updates a work permission's data in Firestore.
- * @param uid - The work permission ID.
+ * @param id - The work permission ID.
  * @param workPermission - An object containing the fields to update.
  * @returns A Promise resolved when the data is successfully updated.
  */
 export function updateWorkPermissionService(
-  uid: string,
+  id: string,
   workPermission: Partial<WorkPermissionData>,
 ): Promise<void> {
   if (!workPermission) return Promise.reject(new Error('No work permission provided for update'));
 
-  return updateDoc(doc(workPermissionCollection, uid), workPermission)
+  return updateDoc(doc(workPermissionCollection, id), workPermission)
     .then(() => {
       console.log('Work permission updated successfully!');
     })
@@ -89,16 +96,12 @@ export function updateWorkPermissionService(
 
 /**
  * Deletes a work permission from Firestore.
- * @param uid - The work permission ID.
+ * @param id - The work permission ID.
  * @returns A Promise resolved when the work permission is successfully deleted.
  */
-export function deleteWorkPermissionService(uid: string): Promise<void> {
-  return deleteDoc(doc(workPermissionCollection, uid))
-    .then(() => {
-      console.log('Work permission deleted successfully!');
-    })
-    .catch((error) => {
-      console.error('Error deleting work permission:', error);
-      throw error;
-    });
+export function deleteWorkPermissionService(id: string): Promise<void> {
+  return deleteDoc(doc(workPermissionCollection, id)).catch((error) => {
+    console.error('Error deleting work permission:', error);
+    throw error;
+  });
 }

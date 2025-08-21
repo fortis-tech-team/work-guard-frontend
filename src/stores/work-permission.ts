@@ -36,11 +36,11 @@ export const useWorkPermissionStore = defineStore('workPermission', {
         .finally(() => this.setLoading({ name: 'create', isLoading: false }));
     },
 
-    getWorkPermissionById(uid: string): Promise<WorkPermissionData> {
+    getWorkPermissionById(id: string): Promise<WorkPermissionData> {
       this.setLoading({ name: 'getById', isLoading: true });
       this.error = null;
 
-      return getWorkPermissionByIdService(uid)
+      return getWorkPermissionByIdService(id)
         .then((data) => {
           this.workPermission = data as WorkPermissionData;
           return this.workPermission;
@@ -61,13 +61,13 @@ export const useWorkPermissionStore = defineStore('workPermission', {
         .finally(() => this.setLoading({ name: 'get', isLoading: false }));
     },
 
-    updateWorkPermission(uid: string, updates: Partial<WorkPermissionData>) {
+    updateWorkPermission(id: string, updates: Partial<WorkPermissionData>) {
       this.setLoading({ name: 'update', isLoading: true });
       this.error = null;
 
-      return updateWorkPermissionService(uid, updates)
+      return updateWorkPermissionService(id, updates)
         .then(() => {
-          if (this.workPermission && this.workPermission.uid === uid) {
+          if (this.workPermission && this.workPermission.id === id) {
             Object.assign(this.workPermission, updates);
           }
         })
@@ -75,16 +75,16 @@ export const useWorkPermissionStore = defineStore('workPermission', {
         .finally(() => this.setLoading({ name: 'update', isLoading: false }));
     },
 
-    deleteWorkPermission(uid: string) {
+    deleteWorkPermission(id: string) {
       this.setLoading({ name: 'delete', isLoading: true });
       this.error = null;
 
-      return deleteWorkPermissionService(uid)
+      return deleteWorkPermissionService(id)
         .then(() => {
           if (this.workPermissions) {
-            this.workPermissions = this.workPermissions.filter((wp) => wp?.uid !== uid);
+            this.workPermissions = this.workPermissions.filter((wp) => wp?.id !== id);
           }
-          if (this.workPermission && this.workPermission.uid === uid) {
+          if (this.workPermission && this.workPermission.id === id) {
             this.workPermission = undefined;
           }
         })
