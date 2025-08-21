@@ -49,11 +49,11 @@ export function getUserByIdService(uid: string): Promise<DocumentData> {
 /**
  * Updates a user's data in Firestore.
  * @param uid - The user ID.
- * @param updates - An object containing the fields to update.
+ * @param user - An object containing the fields to update.
  * @returns A Promise resolved when the data is successfully updated.
  */
-export function updateUserService(uid: string, updates: Partial<UserData>): Promise<void> {
-  return updateDoc(doc(usersCollection, uid), updates)
+export function updateUserService(uid: string, user: Partial<UserData>): Promise<void> {
+  return updateDoc(doc(usersCollection, uid), user)
     .then(() => {
       console.log('User updated successfully!');
     })

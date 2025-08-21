@@ -16,3 +16,26 @@ h6,
   /* font-family: 'Unbounded', sans-serif; */
   font-family: 'Urbanist', sans-serif;
 }
+
+@media print {
+  /* 1. Hide everything on the page by default */
+  body * {
+    visibility: hidden;
+  }
+
+  /* 2. Make ONLY the .printable-area element and its children visible */
+  .printable-area,
+  .printable-area * {
+    visibility: visible;
+  }
+
+  /* 3. Position the printable area to take up the entire page */
+  .printable-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+  }
+}

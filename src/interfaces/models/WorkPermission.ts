@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 // --- TYPE DEFINITIONS for the PT JSON structure ---
 interface Field {
   id: string;
@@ -32,15 +34,16 @@ interface ErrorDetails {
   suggestions: string[];
 }
 
-export interface PTData {
-  ptId: string;
+export type WorkPermissionData = {
+  id: string;
   activityTitle: string;
   version: string;
+  createdAt: Timestamp;
   sections: Section[];
-}
+};
 
-export interface PTResponse {
+export interface WorkPermissionResponse {
   status: 'success' | 'error';
-  data?: PTData;
+  data?: WorkPermissionData;
   error?: ErrorDetails;
 }

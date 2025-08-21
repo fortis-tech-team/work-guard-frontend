@@ -1,2 +1,10 @@
-export type LoadingKey = 'create' | 'update' | 'login' | 'create' | 'logout' | 'get' | 'getById';
+export type LoadingKey =
+  | 'create'
+  | 'update'
+  | 'get'
+  | 'delete'
+  | 'getById'
+  | 'generate'
+  | 'login'
+  | 'logout';
 export type LoadingState = Record<LoadingKey, boolean>;

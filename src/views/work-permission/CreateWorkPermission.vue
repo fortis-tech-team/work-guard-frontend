@@ -1,21 +1,59 @@
 <script setup lang="ts">
 import { onUnmounted, ref } from 'vue';
+import { usePrinter } from '@/composables/usePrinter';
 import { useWorkPermissionStore } from '@/stores/work-permission';
-import type { PTResponse, PTData } from '@/interfaces/models/WorkPermission';
+
+import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
 
 onUnmounted(() => {
   workPermissionStore.$reset();
 });
 
 const workPermissionStore = useWorkPermissionStore();
-const ptJsonData: Partial<PTResponse> = workPermissionStore.workPermission;
+const ptJsonData: WorkPermissionData = workPermissionStore.workPermission as WorkPermissionData;
 
 // Create a reactive reference to the PT data
-const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
+const ptData = ref<WorkPermissionData>(ptJsonData);
+
+// Function to print the work permission
+const { isPrinting, print } = usePrinter();
+
+// Save function to handle saving the work permission
+const snackbar = ref({
+  show: false,
+  message: '',
+  color: 'success',
+});
+function onSave() {
+  if (!ptData.value) return;
+  workPermissionStore
+    .createWorkPermission(ptData.value)
+    .then(() => {
+      snackbar.value = {
+        show: true,
+        message: 'Permissão de trabalho salva com sucesso!',
+        color: 'success',
+      };
+    })
+    .catch((err) => {
+      snackbar.value = {
+        show: true,
+        message: 'Erro ao salvar permissão de trabalho: ' + (err?.message || 'Erro desconhecido'),
+        color: 'error',
+      };
+    });
+}
 </script>
 
 <template>
-  <v-card class="mx-auto" max-width="900" elevation="4" color="white" v-if="ptData?.ptId">
+  <v-card
+    v-if="ptData"
+    id="create-work-permission"
+    class="mx-auto"
+    max-width="900"
+    elevation="4"
+    color="transparent"
+  >
     <v-card-title class="text-h4 text-center primary white--text py-4">
       Permissão de Trabalho (PT)
     </v-card-title>
@@ -55,14 +93,14 @@ const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
 
               <!-- Render Risk List -->
               <template v-if="section.type === 'risk_list'">
-                <v-list density="compact" bg-color="white">
-                  <v-list-item v-for="(risk, rIndex) in section.content.risks" :key="rIndex">
-                    <template v-slot:prepend>
-                      <v-icon color="warning" icon="mdi-alert-circle-outline" />
-                    </template>
-                    <v-list-item-title>{{ risk }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
+                <div
+                  class="d-flex ga-3 pa-1 pl-4"
+                  v-for="(risk, index) in section.content.risks"
+                  :key="index"
+                >
+                  <v-icon color="warning" icon="mdi-alert-circle-outline" />
+                  <p class="text-body-1">{{ risk }}</p>
+                </div>
               </template>
 
               <!-- Render Checklist Group -->
@@ -73,9 +111,8 @@ const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
                     v-for="item in group.items"
                     :key="item"
                     :label="item"
-                    dense
+                    density="compact"
                     hide-details
-                    class="mb-1"
                   />
                 </div>
               </template>
@@ -95,13 +132,41 @@ const ptData = ref<PTData>(ptJsonData?.data || ({} as PTData));
     </v-card-text>
     <v-card-actions class="pa-6">
       <v-spacer />
-      <v-btn color="primary" x-large>Emitir e Imprimir PT</v-btn>
+      <v-btn
+        id="save-work-permission"
+        color="primary"
+        size="x-large"
+        @click="onSave"
+        :loading="workPermissionStore.loading.create"
+        :disabled="workPermissionStore.loading.create"
+      >
+        Salvar
+      </v-btn>
+      <v-btn
+        id="print-work-permission"
+        color="primary"
+        size="x-large"
+        @click="print('create-work-permission')"
+        :loading="isPrinting"
+      >
+        Imprimir
+      </v-btn>
     </v-card-actions>
   </v-card>
 
   <v-alert v-else type="error" class="mt-4">
     Não foi possível carregar a Permissão de Trabalho. Por favor, tente novamente mais tarde.
   </v-alert>
+
+  <v-snackbar
+    v-model="snackbar.show"
+    :color="snackbar.color"
+    location="top end"
+    timeout="3500"
+    rounded
+  >
+    {{ snackbar.message }}
+  </v-snackbar>
 </template>
 
 <style>

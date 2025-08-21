@@ -57,13 +57,20 @@ async function logout() {
 
         <v-list density="compact" nav @update:selected="changePage">
           <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" />
+          <v-list-item
+            prepend-icon="mdi mdi-clipboard-text"
+            title="Permissoes de trabalho"
+            value="list-work-permission"
+          />
           <v-list-item prepend-icon="mdi-account" title="My Account" value="account" />
         </v-list>
       </v-navigation-drawer>
 
       <v-app-bar class="px-3" v-if="authStore.isAuthenticated">
         <v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer = !drawer" />
-        <v-app-bar-title>Work Guard</v-app-bar-title>
+        <v-app-bar-title class="cursor-pointer" @click="router.push({ name: 'home' })">
+          Work Guard
+        </v-app-bar-title>
 
         <v-btn
           v-if="!mobile"
