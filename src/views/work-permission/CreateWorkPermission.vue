@@ -52,7 +52,7 @@ function onSave() {
     class="mx-auto"
     max-width="900"
     elevation="4"
-    color="white"
+    color="transparent"
   >
     <v-card-title class="text-h4 text-center primary white--text py-4">
       Permissão de Trabalho (PT)
@@ -93,14 +93,14 @@ function onSave() {
 
               <!-- Render Risk List -->
               <template v-if="section.type === 'risk_list'">
-                <v-list density="compact" bg-color="white">
-                  <v-list-item v-for="(risk, rIndex) in section.content.risks" :key="rIndex">
-                    <template v-slot:prepend>
-                      <v-icon color="warning" icon="mdi-alert-circle-outline" />
-                    </template>
-                    <v-list-item-title>{{ risk }}</v-list-item-title>
-                  </v-list-item>
-                </v-list>
+                <div
+                  class="d-flex ga-3 pa-1 pl-4"
+                  v-for="(risk, index) in section.content.risks"
+                  :key="index"
+                >
+                  <v-icon color="warning" icon="mdi-alert-circle-outline" />
+                  <p class="text-body-1">{{ risk }}</p>
+                </div>
               </template>
 
               <!-- Render Checklist Group -->
@@ -111,9 +111,8 @@ function onSave() {
                     v-for="item in group.items"
                     :key="item"
                     :label="item"
-                    dense
+                    density="compact"
                     hide-details
-                    class="mb-1"
                   />
                 </div>
               </template>
