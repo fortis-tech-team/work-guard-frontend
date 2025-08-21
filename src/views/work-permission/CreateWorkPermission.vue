@@ -10,7 +10,7 @@ onUnmounted(() => {
 });
 
 const workPermissionStore = useWorkPermissionStore();
-const ptJsonData: WorkPermissionData = workPermissionStore.workPermission;
+const ptJsonData: WorkPermissionData = workPermissionStore.workPermission as WorkPermissionData;
 
 // Create a reactive reference to the PT data
 const ptData = ref<WorkPermissionData>(ptJsonData);

@@ -2,7 +2,7 @@ import type { WorkPermissionData, WorkPermissionResponse } from '../models/WorkP
 import type { LoadingState } from './VariablesState';
 
 export interface WorkPermissionState {
-  workPermission: WorkPermissionData;
+  workPermission: WorkPermissionData | undefined;
   workPermissions: WorkPermissionData[];
   loading: Partial<LoadingState>;
   error: string | null;

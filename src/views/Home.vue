@@ -112,9 +112,7 @@ function getRandomPTSuggestion(limit: number): string[] {
     <h4>Sugestoes:</h4>
     <v-list bg-color="white">
       <v-list-item v-for="(item, index) in getRandomPTSuggestion(5)" :key="index">
-        <v-list-item-content>
-          <v-list-item-title>{{ item }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-title>{{ item }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-col>

@@ -32,14 +32,13 @@ interface ErrorDetails {
   suggestions: string[];
 }
 
-export type WorkPermissionData =
-  | {
-      uid?: string;
-      activityTitle: string;
-      version: string;
-      sections: Section[];
-    }
-  | undefined;
+export type WorkPermissionData = {
+  uid?: string;
+  activityTitle: string;
+  version: string;
+  createdAt: string;
+  sections: Section[];
+};
 
 export interface WorkPermissionResponse {
   status: 'success' | 'error';
