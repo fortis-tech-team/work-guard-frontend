@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue';
 import { useWorkPermissionStore } from '@/stores/work-permission';
+import { formatFirestoreTimestamp } from '@/helper/dateFormatter';
 
 const workPermissionStore = useWorkPermissionStore();
 
@@ -21,7 +22,7 @@ const error = computed(() => workPermissionStore.error);
 <template>
   <v-row>
     <v-col>
-      <h1 class="font-unbounded mb-6">Work Permissions List</h1>
+      <h1 class="font-unbounded mb-6">Permissão de trabalho</h1>
       <v-alert v-if="error" type="error" variant="tonal" class="mb-4" border="start" prominent>
         {{ error }}
       </v-alert>
@@ -46,11 +47,11 @@ const error = computed(() => workPermissionStore.error);
           </tr>
         </thead>
         <tbody>
-          <tr v-for="wp in workPermissions" :key="wp.createdAt">
+          <tr v-for="wp in workPermissions" :key="wp.id">
             <td>{{ wp.activityTitle }}</td>
             <td>{{ wp.version }}</td>
-            <td>{{ wp.createdAt ? new Date(wp.createdAt).toLocaleDateString() : '-' }}</td>
-            <td>
+            <td>{{ formatFirestoreTimestamp(wp.createdAt) || '-' }}</td>
+            <td :id="`actions-${wp.id}`">
               <v-btn color="primary" size="small" variant="tonal" prepend-icon="mdi-eye">
                 View
               </v-btn>
@@ -59,8 +60,10 @@ const error = computed(() => workPermissionStore.error);
                 size="small"
                 variant="tonal"
                 class="ml-2"
-                @click="workPermissionStore.deleteWorkPermission(wp.createdAt || '')"
+                @click="workPermissionStore.deleteWorkPermission(wp.id || '')"
                 prepend-icon="mdi-delete"
+                :loading="workPermissionStore.loading.delete"
+                :disabled="workPermissionStore.loading.delete"
               >
                 Delete
               </v-btn>

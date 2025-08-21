@@ -1,3 +1,5 @@
+import type { Timestamp } from "firebase/firestore";
+
 // --- TYPE DEFINITIONS for the PT JSON structure ---
 interface Field {
   id: string;
@@ -33,10 +35,10 @@ interface ErrorDetails {
 }
 
 export type WorkPermissionData = {
-  uid?: string;
+  id: string;
   activityTitle: string;
   version: string;
-  createdAt: string;
+  createdAt: Timestamp;
   sections: Section[];
 };
 
