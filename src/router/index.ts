@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 const routes = [
@@ -9,7 +9,7 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/pt/criar',
+    path: '/permissao-trabalho/criar',
     name: 'create-work-permission',
     component: () => import('../views/work-permission/CreateWorkPermission.vue'),
     meta: { requiresAuth: true },
@@ -38,7 +38,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 });
 
