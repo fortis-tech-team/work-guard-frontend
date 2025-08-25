@@ -13,6 +13,11 @@ const routes = [
     component: () => import('@/views/work-permission/CreateWorkPermission.vue'),
   },
   {
+    path: '/permissao-trabalho/:id',
+    name: 'view-work-permission',
+    component: () => import('@/views/work-permission/ShowWorkPermission.vue'),
+  },
+  {
     path: '/permissao-trabalho',
     name: 'list-work-permission',
     component: () => import('@/views/work-permission/ListWorkPermission.vue'),
