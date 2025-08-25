@@ -12,7 +12,7 @@ import {
   type DocumentData,
 } from 'firebase/firestore';
 
-const workPermissionCollection = collection(db, 'work-permission');
+const workPermissionCollection = collection(db, 'work-permissions');
 
 /**
  * Creates a new work permission in Firestore.
