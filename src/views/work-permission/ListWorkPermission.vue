@@ -33,7 +33,7 @@ const error = computed(() => workPermissionStore.error);
         class="mb-4"
       />
       <v-table
-        v-if="workPermissions && workPermissions.length"
+        v-else-if="workPermissions && workPermissions.length"
         class="elevation-2 bg-transparent"
         density="comfortable"
         color="white"
@@ -77,13 +77,7 @@ const error = computed(() => workPermissionStore.error);
           </tr>
         </tbody>
       </v-table>
-      <v-alert
-        v-else-if="!workPermissionStore.loading.get"
-        type="info"
-        variant="tonal"
-        border="start"
-        class="mt-6"
-      >
+      <v-alert v-else type="info" variant="tonal" border="start" class="mt-6">
         No work permissions found.
       </v-alert>
     </v-col>
