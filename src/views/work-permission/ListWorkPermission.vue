@@ -5,8 +5,8 @@ import { formatFirestoreTimestamp } from '@/helper/dateFormatter';
 
 const workPermissionStore = useWorkPermissionStore();
 
-onMounted(async () => {
-  await workPermissionStore.getWorkPermissions();
+onMounted(() => {
+  workPermissionStore.getWorkPermissions();
 });
 
 onUnmounted(() => {
@@ -52,7 +52,13 @@ const error = computed(() => workPermissionStore.error);
             <td>{{ wp.version }}</td>
             <td>{{ formatFirestoreTimestamp(wp.createdAt) || '-' }}</td>
             <td :id="`actions-${wp.id}`">
-              <v-btn color="primary" size="small" variant="tonal" prepend-icon="mdi-eye">
+              <v-btn
+                color="primary"
+                size="small"
+                variant="tonal"
+                prepend-icon="mdi-eye"
+                :to="{ name: 'view-work-permission', params: { id: wp.id } }"
+              >
                 View
               </v-btn>
               <v-btn
