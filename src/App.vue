@@ -10,14 +10,6 @@ const router = useRouter();
 
 // Navigation control
 const drawer = ref(!mobile.value);
-function changePage(page: unknown) {
-  if (Array.isArray(page) && page.length > 0 && typeof page[0] === 'string') {
-    const routerName = page[0];
-    router.push({ name: routerName });
-  } else {
-    router.push({ name: 'home' });
-  }
-}
 
 // Theme control
 const theme = ref('myCustomLightTheme');
@@ -55,15 +47,33 @@ async function logout() {
 
         <v-divider />
 
-        <v-list density="compact" nav @update:selected="changePage">
-          <v-list-item prepend-icon="mdi-home-city" title="Home" value="home" />
-          <v-list-item prepend-icon="mdi-account" title="My Account" value="account" />
+        <v-list density="compact" nav>
+          <v-list-item
+            prepend-icon="mdi-home-city"
+            title="Home"
+            value="home"
+            :to="{ name: 'home' }"
+          />
+          <v-list-item
+            prepend-icon="mdi mdi-clipboard-text"
+            title="Permissoes de trabalho"
+            value="list-work-permission"
+            :to="{ name: 'list-work-permission' }"
+          />
+          <v-list-item
+            prepend-icon="mdi-account"
+            title="My Account"
+            value="account"
+            :to="{ name: 'account' }"
+          />
         </v-list>
       </v-navigation-drawer>
 
       <v-app-bar class="px-3" v-if="authStore.isAuthenticated">
         <v-app-bar-nav-icon v-if="mobile" variant="text" @click.stop="drawer = !drawer" />
-        <v-app-bar-title>Work Guard</v-app-bar-title>
+        <v-app-bar-title class="cursor-pointer" @click="router.push({ name: 'home' })">
+          Work Guard
+        </v-app-bar-title>
 
         <v-btn
           v-if="!mobile"

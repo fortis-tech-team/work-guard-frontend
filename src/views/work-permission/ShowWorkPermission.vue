@@ -1,20 +1,27 @@
 <script setup lang="ts">
-import { onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { usePrinter } from '@/composables/usePrinter';
 import { useWorkPermissionStore } from '@/stores/work-permission';
 
 import type { WorkPermissionData } from '@/interfaces/models/WorkPermission';
 import { WorkPermissionTemplate } from '@/components/work-permission';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const workPermissionStore = useWorkPermissionStore();
+
+onMounted(() => {
+  workPermissionStore.getWorkPermissionById(route.params.id as string).then((data) => {
+    workPermission.value = data as WorkPermissionData;
+  });
+});
 
 onUnmounted(() => {
   workPermissionStore.$reset();
 });
 
-const workPermissionStore = useWorkPermissionStore();
-const ptJsonData: WorkPermissionData = workPermissionStore.workPermission as WorkPermissionData;
-
 // Create a reactive reference to the PT data
-const ptData = ref<WorkPermissionData>(ptJsonData);
+const workPermission = ref<WorkPermissionData>();
 
 // Function to print the work permission
 const { isPrinting, print } = usePrinter();
@@ -25,55 +32,30 @@ const snackbar = ref({
   message: '',
   color: 'success',
 });
-function onSave() {
-  if (!ptData.value) return;
-  workPermissionStore
-    .createWorkPermission(ptData.value)
-    .then(() => {
-      snackbar.value = {
-        show: true,
-        message: 'Permissão de trabalho salva com sucesso!',
-        color: 'success',
-      };
-    })
-    .catch((err) => {
-      snackbar.value = {
-        show: true,
-        message: 'Erro ao salvar permissão de trabalho: ' + (err?.message || 'Erro desconhecido'),
-        color: 'error',
-      };
-    });
-}
 </script>
 
 <template>
   <v-row>
+    <v-col>
+      <h1 class="font-unbounded mb-6">Ver Permissão de trabalho</h1>
+    </v-col>
+  </v-row>
+  <v-row>
     <v-col v-if="workPermissionStore.loading.getById">
       <v-progress-linear indeterminate color="primary" class="mb-4" />
     </v-col>
-    <v-col v-else-if="!ptData">
+    <v-col v-else-if="!workPermission">
       <v-alert type="error" class="mt-4">
         Não foi possível carregar a Permissão de Trabalho. Por favor, tente novamente mais tarde.
       </v-alert>
     </v-col>
     <v-col v-else>
-      <WorkPermissionTemplate id="create-work-permission" :workPermission="ptData" />
+      <WorkPermissionTemplate id="create-work-permission" :workPermission="workPermission" />
     </v-col>
   </v-row>
 
   <v-row class="my-6" justify="center">
-    <v-col class="ga-3 d-flex justify-end">
-      <v-btn
-        id="save-work-permission"
-        color="primary"
-        variant="outlined"
-        size="large"
-        @click="onSave"
-        :loading="workPermissionStore.loading.create"
-        :disabled="workPermissionStore.loading.create"
-      >
-        Salvar
-      </v-btn>
+    <v-col class="ga-3 d-flex justify-end" v-if="workPermission">
       <v-btn
         id="print-work-permission"
         color="primary"

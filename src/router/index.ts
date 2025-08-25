@@ -5,35 +5,45 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/Home.vue'),
-    meta: { requiresAuth: true },
+    component: () => import('@/views/Home.vue'),
   },
   {
     path: '/permissao-trabalho/criar',
     name: 'create-work-permission',
-    component: () => import('../views/work-permission/CreateWorkPermission.vue'),
-    meta: { requiresAuth: true },
+    component: () => import('@/views/work-permission/CreateWorkPermission.vue'),
+  },
+  {
+    path: '/permissao-trabalho/:id',
+    name: 'view-work-permission',
+    component: () => import('@/views/work-permission/ShowWorkPermission.vue'),
+  },
+  {
+    path: '/permissao-trabalho',
+    name: 'list-work-permission',
+    component: () => import('@/views/work-permission/ListWorkPermission.vue'),
   },
   {
     path: '/account',
     name: 'account',
-    component: () => import('../views/Account.vue'),
-    meta: { requiresAuth: true },
+    component: () => import('@/views/Account.vue'),
   },
   {
     path: '/sign-up',
     name: 'sign-up',
-    component: () => import('../views/SignUp.vue'),
+    component: () => import('@/views/SignUp.vue'),
+    meta: { publicRoute: true },
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/Login.vue'),
+    component: () => import('@/views/Login.vue'),
+    meta: { publicRoute: true },
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'pageNotFound',
-    component: () => import('../views/PageNotFound.vue'),
+    component: () => import('@/views/PageNotFound.vue'),
+    meta: { publicRoute: true },
   },
 ];
 
@@ -50,7 +60,7 @@ router.beforeEach(async (to, from, next) => {
     authStore.isFirstVisit = false;
   }
 
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+  if (!to.meta.publicRoute && !authStore.isAuthenticated) {
     next({ name: 'login' }); // Redirect to login page
   } else {
     next(); // Allow pagination
