@@ -50,7 +50,7 @@ const snackbar = ref({
       </v-alert>
     </v-col>
     <v-col v-else>
-      <WorkPermissionTemplate id="create-work-permission" :workPermission="workPermission" />
+      <WorkPermissionTemplate id="show-work-permission" :workPermission="workPermission" />
     </v-col>
   </v-row>
 
@@ -61,7 +61,7 @@ const snackbar = ref({
         color="primary"
         size="large"
         variant="outlined"
-        @click="print('create-work-permission')"
+        @click="print('show-work-permission')"
         :loading="isPrinting"
       >
         Imprimir
