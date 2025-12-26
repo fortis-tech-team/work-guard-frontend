@@ -36,11 +36,6 @@ const snackbar = ref({
 
 <template>
   <v-row>
-    <v-col>
-      <h1 class="font-unbounded mb-6">Ver Permissão de trabalho</h1>
-    </v-col>
-  </v-row>
-  <v-row>
     <v-col v-if="workPermissionStore.loading.getById">
       <v-progress-linear indeterminate color="primary" class="mb-4" />
     </v-col>
