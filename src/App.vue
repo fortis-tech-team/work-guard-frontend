@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from './stores/auth';
 import { ref } from 'vue';
-import Header from './components/layout/Header.vue';
+import { Header } from './components/layout';
 
 const authStore = useAuthStore();
 
