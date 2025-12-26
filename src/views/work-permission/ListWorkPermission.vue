@@ -10,9 +10,7 @@ onMounted(() => {
   workPermissionStore.getWorkPermissions();
 });
 
-onUnmounted(() => {
-  workPermissionStore.$reset();
-});
+onUnmounted(() => {});
 
 const workPermissions = computed(() =>
   workPermissionStore.workPermissions ? workPermissionStore.workPermissions : [],
@@ -28,7 +26,7 @@ const error = computed(() => workPermissionStore.error);
       <v-progress-linear indeterminate color="primary" class="mb-4" />
     </v-col>
 
-    <template v-else-if="workPermissions.length > 0">
+    <template v-if="workPermissions.length > 0">
       <v-col cols="12" class="pb-4">
         <span class="work-permission-count">
           Você possui {{ workPermissions.length }} permissões de trabalhos
@@ -51,7 +49,7 @@ const error = computed(() => workPermissionStore.error);
       </v-col>
     </template>
 
-    <v-col v-else>
+    <v-col v-else-if="!workPermissionStore.loading.get">
       <v-alert v-if="error" type="error" variant="tonal" class="mb-4" border="start" prominent>
         {{ error }}
       </v-alert>

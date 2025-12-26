@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useDisplay } from 'vuetify';
 import { useRouter, useRoute, type RouteLocationRaw } from 'vue-router';
 import Logo from '@/assets/images/logo.png';
