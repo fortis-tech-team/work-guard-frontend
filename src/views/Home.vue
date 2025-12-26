@@ -72,23 +72,26 @@ function getRandomPTSuggestion(limit: number): string[] {
 
     <v-row class="mt-12">
       <v-col>
-        <v-text-field
-          v-model="searchModel"
-          class="search-input border-sm"
-          :rounded="28"
-          @click:append-inner="onSearch"
-          :loading="workPermissionStore.loading.generate"
-          :disabled="workPermissionStore.loading.generate"
-          :error="!!workPermissionStore.error || !!errorStatus"
-          :messages="workPermissionStore.error || errorStatus || ''"
-          append-inner-icon="mdi-arrow-right"
-          icon-color="#0057A3"
-          label="Informe o tipo de atividade para elaboração da Permissão de Trabalho"
-          variant="solo-filled"
-          flat
-          hide-details
-          single-line
-        />
+        <div class="search-input-wrapper">
+          <v-text-field
+            v-model="searchModel"
+            class="search-input border-sm"
+            :rounded="28"
+            :loading="workPermissionStore.loading.generate"
+            :disabled="workPermissionStore.loading.generate"
+            :error="!!workPermissionStore.error || !!errorStatus"
+            :messages="workPermissionStore.error || errorStatus || ''"
+            label="Informe o tipo de atividade para elaboração da Permissão de Trabalho"
+            variant="solo-filled"
+            flat
+            hide-details
+            single-line
+          />
+          <v-btn type="submit" icon color="primary" size="x-small" class="search-input-button">
+            <v-icon>mdi-arrow-right</v-icon>
+          </v-btn>
+        </div>
+
         <!-- TODO: Create a v-autocomplete for searching work permissions -->
         <v-col v-if="false">
           <v-autocomplete
@@ -136,6 +139,15 @@ function getRandomPTSuggestion(limit: number): string[] {
   font-size: 36px;
   text-align: center;
 }
+.search-input-wrapper {
+  position: relative;
+}
+.search-input-button {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
 .search-input,
 .search-input :deep(.v-field) {
   border-radius: 28px !important;
@@ -154,7 +166,7 @@ function getRandomPTSuggestion(limit: number): string[] {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 </style>
