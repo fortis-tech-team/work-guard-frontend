@@ -13,7 +13,7 @@ interface ChecklistGroup {
   items: string[];
 }
 
-interface SectionContent {
+export interface SectionContent {
   fields?: Field[];
   risks?: string[];
   groups?: ChecklistGroup[];

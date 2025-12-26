@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useDisplay } from 'vuetify';
-import { useRouter, type RouteLocationRaw } from 'vue-router';
+import { useRouter, useRoute, type RouteLocationRaw } from 'vue-router';
 import Logo from '@/assets/images/logo.png';
 
 defineProps<{
@@ -9,7 +9,10 @@ defineProps<{
 }>();
 
 const router = useRouter();
+const route = useRoute();
 const { mobile } = useDisplay();
+
+// Functions
 function redirectTo(location: RouteLocationRaw) {
   router.push(location);
 }
@@ -21,7 +24,17 @@ function handleTheme() {
 }
 
 // Tabas section
-const activeTab = ref('0');
+const activeTab = ref('home');
+const routeToTabMap: Record<string, string> = {
+  home: 'home',
+  'list-work-permission': 'task-manager',
+  // Add more routes and their corresponding tab values here
+};
+
+onMounted(async () => {
+  await router.isReady(); // Ensure the route is fully resolved
+  activeTab.value = routeToTabMap[route.name as string] || 'home';
+});
 
 // // Logout
 // async function logout() {
@@ -59,7 +72,7 @@ const activeTab = ref('0');
     <template v-slot:extension>
       <v-tabs v-model="activeTab" align-tabs="center" class="w-100">
         <v-tab
-          value="0"
+          value="home"
           class="text-body-2 font-weight-medium"
           style="min-width: 180px"
           @click="redirectTo({ name: 'home' })"
@@ -67,7 +80,7 @@ const activeTab = ref('0');
           Nova Tarefa
         </v-tab>
         <v-tab
-          value="1"
+          value="task-manager"
           class="text-body-2 font-weight-medium"
           style="min-width: 180px"
           @click="redirectTo({ name: 'list-work-permission' })"

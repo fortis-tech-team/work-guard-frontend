@@ -4,7 +4,7 @@ export const myCustomLightTheme: ThemeDefinition = {
   dark: false,
   colors: {
     background: '#F5F5F5',
-    surface: '#FBFBFB',
+    surface: '#EAF5FF',
     'surface-light': '#D6E6FF',
     // 'surface-bright': '#FFFFFF',
     // 'surface-variant': '#424242',

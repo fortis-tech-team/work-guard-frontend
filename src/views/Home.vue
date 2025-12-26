@@ -151,6 +151,7 @@ function getRandomPTSuggestion(limit: number): string[] {
 .search-input,
 .search-input :deep(.v-field) {
   border-radius: 28px !important;
+  background-color: #f3f3f3;
 }
 .suggentions h5 {
   font-size: 12px;
