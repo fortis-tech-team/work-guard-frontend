@@ -14,6 +14,12 @@ onUnmounted(() => {
 const searchModel = ref('');
 const errorStatus = ref<string | null>(null);
 
+function selectedSuggestion(item: string) {
+  if (item && PTSuggestions.includes(item)) {
+    return (searchModel.value = item);
+  }
+}
+
 function onSearch() {
   errorStatus.value = null;
 
@@ -57,63 +63,110 @@ function getRandomPTSuggestion(limit: number): string[] {
 </script>
 
 <template>
-  <h1>Home</h1>
-
   <v-form @submit.prevent="onSearch">
     <v-row class="mt-6">
-      <v-col>
-        <h4>Qual a sua tarefa de hoje?</h4>
-        <v-text-field
-          :error="!!workPermissionStore.error || !!errorStatus"
-          :messages="workPermissionStore.error || errorStatus || ''"
-          v-model="searchModel"
-          variant="outlined"
-          :loading="workPermissionStore.loading.generate"
-          :disabled="workPermissionStore.loading.generate"
-          class="mt-2"
-        />
-      </v-col>
-      <v-col v-if="false">
-        <h4>Qual a sua tarefa de hoje?</h4>
-        <v-autocomplete
-          :error="!!workPermissionStore.error || !!errorStatus"
-          :messages="workPermissionStore.error || errorStatus || ''"
-          :loading="workPermissionStore.loading.generate"
-          :disabled="workPermissionStore.loading.generate"
-          v-model="searchModel"
-          :items="getRandomPTSuggestion(5)"
-          class="mt-2"
-          menu-icon=""
-          placeholder="Pesquisar permissão de trabalho..."
-          prepend-inner-icon="mdi-magnify"
-          theme="light"
-          variant="outlined"
-          auto-select-first
-        />
+      <v-col cols="12">
+        <h1 class="home-title">Olá! Qual é a sua tarefa de hoje?</h1>
       </v-col>
     </v-row>
 
-    <v-row>
+    <v-row class="mt-12">
       <v-col>
-        <v-btn
-          :loading="workPermissionStore.loading.generate"
-          size="large"
-          variant="tonal"
-          block
-          type="submit"
-        >
-          Pesquisar
-        </v-btn>
+        <div class="search-input-wrapper">
+          <v-text-field
+            v-model="searchModel"
+            class="search-input border-sm"
+            :rounded="28"
+            :loading="workPermissionStore.loading.generate"
+            :disabled="workPermissionStore.loading.generate"
+            :error="!!workPermissionStore.error || !!errorStatus"
+            :messages="workPermissionStore.error || errorStatus || ''"
+            label="Informe o tipo de atividade para elaboração da Permissão de Trabalho"
+            variant="solo-filled"
+            flat
+            hide-details
+            single-line
+          />
+          <v-btn type="submit" icon color="primary" size="x-small" class="search-input-button">
+            <v-icon>mdi-arrow-right</v-icon>
+          </v-btn>
+        </div>
+
+        <!-- TODO: Create a v-autocomplete for searching work permissions -->
+        <v-col v-if="false">
+          <v-autocomplete
+            :error="!!workPermissionStore.error || !!errorStatus"
+            :messages="workPermissionStore.error || errorStatus || ''"
+            :loading="workPermissionStore.loading.generate"
+            :disabled="workPermissionStore.loading.generate"
+            v-model="searchModel"
+            :items="getRandomPTSuggestion(5)"
+            class="mt-2"
+            menu-icon=""
+            placeholder="Pesquisar permissão de trabalho..."
+            prepend-inner-icon="mdi-magnify"
+            theme="light"
+            variant="outlined"
+            auto-select-first
+          />
+        </v-col>
       </v-col>
     </v-row>
   </v-form>
 
-  <v-col class="mt-6">
-    <h4>Sugestoes:</h4>
-    <v-list bg-color="transparent" density="comfortable">
-      <v-list-item v-for="(item, index) in getRandomPTSuggestion(5)" :key="index">
-        <v-list-item-title>{{ item }}</v-list-item-title>
-      </v-list-item>
-    </v-list>
-  </v-col>
+  <v-row class="mt-8 suggentions">
+    <v-col cols="12">
+      <h5>Sugestões</h5>
+    </v-col>
+    <v-col
+      v-for="(item, index) in getRandomPTSuggestion(5)"
+      :key="index"
+      sm="6"
+      md="4"
+      class="suggentions-card"
+      @click="selectedSuggestion(item)"
+    >
+      <div class="border-sm rounded-lg pa-4 cursor-pointer h-100">
+        <span> {{ item }} </span>
+      </div>
+    </v-col>
+  </v-row>
 </template>
+
+<style scoped>
+.home-title {
+  font-weight: 400;
+  font-size: 36px;
+  text-align: center;
+}
+.search-input-wrapper {
+  position: relative;
+}
+.search-input-button {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.search-input,
+.search-input :deep(.v-field) {
+  border-radius: 28px !important;
+}
+.suggentions h5 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #696e73;
+  letter-spacing: 0.5px;
+  line-height: 16px;
+}
+.suggentions span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #93989c;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+</style>
