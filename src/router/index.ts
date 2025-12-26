@@ -48,6 +48,7 @@ const routes = [
 ];
 
 const router = createRouter({
+  // Use hash because gitpages doesn't support history mode
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 });
