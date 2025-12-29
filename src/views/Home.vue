@@ -121,8 +121,10 @@ function getRandomPTSuggestion(limit: number): string[] {
     <v-col
       v-for="(item, index) in getRandomPTSuggestion(5)"
       :key="index"
+      cols="12"
+      md="6"
+      lg="4"
       sm="6"
-      md="4"
       class="suggentions-card"
       @click="selectedSuggestion(item)"
     >
@@ -160,7 +162,7 @@ function getRandomPTSuggestion(limit: number): string[] {
   letter-spacing: 0.5px;
   line-height: 16px;
 }
-.suggentions span {
+.suggentions-card span {
   font-size: 12px;
   font-weight: 500;
   color: #93989c;

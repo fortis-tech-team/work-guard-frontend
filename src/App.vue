@@ -12,7 +12,7 @@ const theme = ref('myCustomLightTheme');
 <template>
   <v-responsive max-height="100%">
     <v-app :theme="theme">
-      <Header :show-tabs="authStore.isAuthenticated" v-model="theme" />
+      <Header v-model="theme" />
 
       <v-main>
         <v-container>
