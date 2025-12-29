@@ -2,8 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useDisplay } from 'vuetify';
+import { useWorkPermissionStore } from '@/stores/work-permission';
 import { useRouter, useRoute, type RouteLocationRaw } from 'vue-router';
 import Logo from '@/assets/images/logo.png';
+import { formatFirestoreTimestamp } from '@/helper/dateFormatter';
 
 defineProps<{
   showTabs?: boolean;
@@ -11,6 +13,7 @@ defineProps<{
 
 const router = useRouter();
 const route = useRoute();
+const workPermissionStore = useWorkPermissionStore();
 const authStore = useAuthStore();
 const { mobile } = useDisplay();
 
@@ -112,10 +115,16 @@ async function logout() {
           Gerenciar Tarefas
         </v-tab>
       </v-tabs>
+
       <div class="header-actions" v-else>
-        <v-btn icon="mdi-arrow-left" />
-        <p class="actions-title">Titulo da permissao de trabalho</p>
-        <span class="actions-info">visto por ulitmo</span>
+        <v-btn icon="mdi-arrow-left" @click="router.back()" />
+        <p :title="workPermissionStore.workPermission?.activityTitle" class="actions-title">
+          {{ workPermissionStore.workPermission?.activityTitle }}
+        </p>
+        <div class="fill-space"></div>
+        <span class="actions-info">
+          {{ formatFirestoreTimestamp(workPermissionStore.workPermission?.createdAt) }}
+        </span>
       </div>
     </template>
   </v-app-bar>
@@ -132,15 +141,24 @@ async function logout() {
 .header-actions {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 .actions-title {
   font-weight: 600;
   color: #35393b;
   margin-left: 1rem;
+  width: 100%;
+  white-space: nowrap; /* Prevents the text from breaking */
+  overflow: hidden; /* Hides the overflow content */
+  text-overflow: ellipsis; /* Adds '...' to indicate overflow */
 }
 .actions-info {
   font-size: 12px;
   font-weight: 500;
   color: #5d6164;
+  white-space: nowrap;
+}
+.fill-space {
+  width: 100%;
 }
 </style>

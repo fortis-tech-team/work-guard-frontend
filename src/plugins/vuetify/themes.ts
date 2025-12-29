@@ -6,6 +6,7 @@ export const myCustomLightTheme: ThemeDefinition = {
     background: '#F5F5F5',
     surface: '#EAF5FF',
     'surface-light': '#f9f9ff',
+    'surface-input': '#f3f3f3',
     // 'surface-bright': '#FFFFFF',
     // 'surface-variant': '#424242',
     // 'on-surface-variant': '#EEEEEE',
