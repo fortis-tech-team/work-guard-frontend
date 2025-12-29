@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 import { useDisplay } from 'vuetify';
+import { useWorkPermissionStore } from '@/stores/work-permission';
 import { useRouter, useRoute, type RouteLocationRaw } from 'vue-router';
 import Logo from '@/assets/images/logo.png';
+import { formatFirestoreTimestamp } from '@/helper/dateFormatter';
 
 defineProps<{
   showTabs?: boolean;
@@ -10,6 +13,8 @@ defineProps<{
 
 const router = useRouter();
 const route = useRoute();
+const workPermissionStore = useWorkPermissionStore();
+const authStore = useAuthStore();
 const { mobile } = useDisplay();
 
 // Functions
@@ -36,11 +41,11 @@ onMounted(async () => {
   activeTab.value = routeToTabMap[route.name as string] || 'home';
 });
 
-// // Logout
-// async function logout() {
-//   await authStore.logout();
-//   window.location.reload();
-// }
+// Logout
+async function logout() {
+  await authStore.logout();
+  window.location.reload();
+}
 </script>
 
 <template>
@@ -65,12 +70,34 @@ onMounted(async () => {
         :icon="theme === 'myCustomLightTheme' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
         @click="handleTheme"
       />
-      <v-btn icon="mdi mdi-account-circle" @click="redirectTo({ name: 'account' })" />
 
-      <v-btn icon="mdi-cog-outline" @click="redirectTo({ name: 'account' })" />
+      <v-menu transition="slide-y-transition" v-if="authStore.isAuthenticated">
+        <template v-slot:activator="{ props }">
+          <v-btn icon="mdi mdi-account-circle" v-bind="props" />
+        </template>
+        <v-list>
+          <v-list-item @click="redirectTo({ name: 'account' })">
+            <v-list-item-title>Account</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="logout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
+      <v-btn
+        v-if="authStore.isAuthenticated"
+        icon="mdi-cog-outline"
+        @click="redirectTo({ name: 'account' })"
+      />
     </template>
-    <template v-slot:extension>
-      <v-tabs v-model="activeTab" align-tabs="center" class="w-100">
+    <template v-slot:extension v-if="authStore.isAuthenticated">
+      <v-tabs
+        v-if="!route.meta.hideExtension"
+        v-model="activeTab"
+        align-tabs="center"
+        class="w-100"
+      >
         <v-tab
           value="home"
           class="text-body-2 font-weight-medium"
@@ -88,6 +115,17 @@ onMounted(async () => {
           Gerenciar Tarefas
         </v-tab>
       </v-tabs>
+
+      <div class="header-actions" v-else>
+        <v-btn icon="mdi-arrow-left" @click="router.back()" />
+        <p :title="workPermissionStore.workPermission?.activityTitle" class="actions-title">
+          {{ workPermissionStore.workPermission?.activityTitle }}
+        </p>
+        <div class="fill-space"></div>
+        <span class="actions-info">
+          {{ formatFirestoreTimestamp(workPermissionStore.workPermission?.createdAt) }}
+        </span>
+      </div>
     </template>
   </v-app-bar>
 </template>
@@ -99,5 +137,28 @@ onMounted(async () => {
   gap: 0.5rem;
   cursor: pointer;
   padding: 0.5rem 0.5rem 0.5rem 0;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.actions-title {
+  font-weight: 600;
+  color: #35393b;
+  margin-left: 1rem;
+  width: 100%;
+  white-space: nowrap; /* Prevents the text from breaking */
+  overflow: hidden; /* Hides the overflow content */
+  text-overflow: ellipsis; /* Adds '...' to indicate overflow */
+}
+.actions-info {
+  font-size: 12px;
+  font-weight: 500;
+  color: #5d6164;
+  white-space: nowrap;
+}
+.fill-space {
+  width: 100%;
 }
 </style>

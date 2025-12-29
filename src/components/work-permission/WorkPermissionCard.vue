@@ -20,6 +20,7 @@ defineProps({
     elevation="0"
     class="d-flex align-center justify-space-between work-permission-card"
     v-bind="$attrs"
+    color="surface-light"
   >
     <div class="work-permission-text-content w-100">
       <div class="d-flex">
@@ -42,7 +43,6 @@ defineProps({
 
 <style scoped>
 .work-permission-card {
-  background-color: #f9f9ff;
   border: 1px solid #dfdfdf;
   border-radius: 12px;
   padding: 1rem;
