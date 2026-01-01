@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useDisplay } from 'vuetify';
 import { useWorkPermissionStore } from '@/stores/work-permission';
@@ -29,17 +29,12 @@ function handleTheme() {
 }
 
 // Tabas section
-const activeTab = ref('home');
+const activeTab = computed(() => routeToTabMap[route.name as string] || 'home');
 const routeToTabMap: Record<string, string> = {
   home: 'home',
   'list-work-permission': 'task-manager',
   // Add more routes and their corresponding tab values here
 };
-
-onMounted(async () => {
-  await router.isReady(); // Ensure the route is fully resolved
-  activeTab.value = routeToTabMap[route.name as string] || 'home';
-});
 
 // Logout
 async function logout() {
@@ -94,7 +89,7 @@ async function logout() {
     <template v-slot:extension v-if="authStore.isAuthenticated">
       <v-tabs
         v-if="!route.meta.hideExtension"
-        v-model="activeTab"
+        :model-value="activeTab"
         align-tabs="center"
         class="w-100"
       >

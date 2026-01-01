@@ -13,6 +13,7 @@ defineProps<{
       v-for="section in workPermission.sections"
       :key="section.sectionId"
       class="mx-auto mb-4"
+      v-bind="$attrs"
     >
       <SectionTitle>{{ section.sectionTitle }}</SectionTitle>
       <SectionContent :type="section.type" :content="section.content" />
