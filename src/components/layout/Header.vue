@@ -89,7 +89,7 @@ async function logout() {
     <template v-slot:extension v-if="authStore.isAuthenticated">
       <v-tabs
         v-if="!route.meta.hideExtension"
-        v-model="activeTab"
+        :model-value="activeTab"
         align-tabs="center"
         class="w-100"
       >
